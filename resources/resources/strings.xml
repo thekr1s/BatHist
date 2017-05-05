@@ -8,17 +8,21 @@
     <string id="BackgroundColorRTitle">RGB Background Red</string>
     <string id="BackgroundColorGTitle">RGB Background Green</string>
     <string id="BackgroundColorBTitle">RGB Background Blue</string>
+    <string id="ShowDigitalBackgroundTitle">Show display background</string>
     <string id="DigitalBackgroundColorTitle">Display background color</string>
     <string id="ForegroundColorTitle">Display foreground color</string>
     <string id="NumbersTitle">Number font</string>
-    <string id="QuarterNumbersColorTitle">Color of numbers and 5 minutes marks</string>
+    <string id="QuarterNumbersColorTitle">Color of 5 minutes marks</string>
+    <string id="NumbersColorTitle">Color of numbers</string>
     <string id="MinutesColorTitle">Color of minutes marks</string>
     <string id="markslenthTitle">lenth of minutes marks (0-5) </string> 
     <string id="HandsFormTitle">Kind of hands</string>
     <string id="HandsColor1Title">First color of hands</string>
     <string id="HandsColor2Title">Second color of hands</string>
-    <string id="HandsOutlineColorTitle">Hands outline color</string>  
-    <string id="SecHandsColorTitle">Color of second hand</string>
+    <string id="HandsOutlineColorTitle">Hands outline color</string>
+    <string id="SecHandsFormTitle">Kind of second hand</string>   
+    <string id="SecHands1ColorTitle">First color of second hand</string>
+    <string id="SecHands2ColorTitle">Second color of second hand</string>
     
     <string id="DigiFontTitle">Font of displays</string>
     <string id="DateFormatTitle">Date format</string>
@@ -35,6 +39,7 @@
     <string id="MoonEnableTitle">Enable moon phase on pos. 3 o´clock</string>
     <string id="AlmMsgEnableTitle">Enable Alm / Msg indicators</string>
     <string id="AlmMsgCountTitle">Show quantity of Alms / Msgs</string>
+    <string id="CenterDotEnableTitle">Enable center dot as BT indicator</string>
     
 
     <string id="ColorRGB">Use RGB</string>
@@ -112,6 +117,9 @@
  	<string id="HandsClassic">Classic</string>
  	<string id="HandsSimple">Simple solid</string>
  	<string id="HandsFenix5like">Simple with hole</string>
+ 	
+ 	<string id="SecHandsClassic">Classic</string>
+	<string id="SecHandsSimple">Simple</string>
     
   	<string id="DualTimeTZ">Time zone for dual time</string>
   	<string id="DualTimeDST">Dual time daylight savings time</string>
