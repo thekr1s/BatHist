@@ -104,7 +104,7 @@ module hands{
 	//Pilot-Hands----------------------------------------------------------
 	if (HandsForm == 2 || HandsForm == 6) {
 		alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
-		alpha2 = Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
+		alpha2 = alpha-.5*Math.PI; //Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 		maxRad = hour_radius;
 		var penWide1;
 		var penWide2;
@@ -185,7 +185,7 @@ module hands{
 				//! minutes settings -------------------------------------------
 				//Stand. for Pilot 
 				alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
-				alpha2 = Math.PI/30.0*(clockTime.min-15);
+				alpha2 = alpha-.5*Math.PI; //Math.PI/30.0*(clockTime.min-15);
 				maxRad = minute_radius;
 		//		r2 = minute_radius * 2.5/10;
 				r3 = minute_radius * 7.5/10;
@@ -208,7 +208,7 @@ module hands{
 		if (HandsForm == 3) { 	
 			//! houres------------------------------------------
 			alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
-			alpha2 = Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
+			alpha2 = alpha-.5*Math.PI; //Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 			maxRad = hour_radius;			
 			r1 = hour_radius * 6/10; // höhe des Querbalkens
 			deflec1 = 0.25; //wide of middle part
@@ -269,7 +269,7 @@ module hands{
 			        
 				//! minutes-------------------------------------------------------
 				alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
-				alpha2 = Math.PI/30.0*(clockTime.min-15);
+				alpha2 = alpha-.5*Math.PI; //Math.PI/30.0*(clockTime.min-15);
 				maxRad = minute_radius;
 				r1 = minute_radius * 6.5/10; // höhe des Querbalkens
 				deflec1 = 0.16;					
@@ -354,7 +354,7 @@ module hands{
 		if (HandsForm == 5) { 	
 			// houres
 			alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
-			alpha2 = Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
+			alpha2 = alpha-.5*Math.PI; //Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 			maxRad = hour_radius;	 													
 			deflec1 = 4.5; // hour hand half width in pixels
 			deflec2 = 20; //short side of hand length
