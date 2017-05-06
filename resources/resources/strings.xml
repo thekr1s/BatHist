@@ -5,6 +5,7 @@
 	<string id="none">None</string>
 
     <string id="BackgroundColorTitle">Background color</string>
+    <string id="SixbitBackgroundTitle">Use 6-bit RGB background</string>
     <string id="BackgroundColorRTitle">RGB Background Red</string>
     <string id="BackgroundColorGTitle">RGB Background Green</string>
     <string id="BackgroundColorBTitle">RGB Background Blue</string>

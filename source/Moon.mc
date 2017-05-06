@@ -61,13 +61,17 @@ class Moon {
 	function drawmoon(dc, moonx, moony) {
         dc.drawBitmap(moonx, moony, moon_bitmap);
 		var x, xby2;
-		var BGColor=0xffffff;
-        	
-        BGColor=App.getApp().getProperty("BackgroundColor");
-        if (BGColor==0x000001) {
+		//var BGColor = App.getApp().getProperty("BackgroundColor");
+        if (App.getApp().getProperty("SixbitBackground")) {
+        	dc.setColor(App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB"),Gfx.COLOR_TRANSPARENT);
+        	}
+        	else {
+        	dc.setColor(App.getApp().getProperty("BackgroundColor"),Gfx.COLOR_TRANSPARENT);
+        	}
+        /*if (BGColor==0x000001) {
         		BGColor=App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB");
         	}
-		dc.setColor(BGColor, Gfx.COLOR_TRANSPARENT);
+		dc.setColor(BGColor, Gfx.COLOR_TRANSPARENT);*/
         //dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_WHITE);
         dc.setPenWidth(1);
 		for (x=1; x<moon_width; x++) {

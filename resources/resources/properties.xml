@@ -9,26 +9,28 @@
 	<property id="ShowAlmMsgCount" type="boolean">true</property>
 	<property id="CenterDotEnable" type="boolean">true</property>
 	
-    <property id="BackgroundColor" type="number">0xFFFFFF</property>
+    <property id="SixbitBackground" type="boolean">false</property>
+    
+    <property id="BackgroundColor" type="number">0x0000FF</property>
     <property id="BackgroundColorR" type="number">0x000000</property>
     <property id="BackgroundColorG" type="number">0x000000</property>
     <property id="BackgroundColorB" type="number">0x0000AA</property>
     
-    <property id="ShowDigitalBackground" type="boolean">true</property>
+    <property id="ShowDigitalBackground" type="boolean">false</property>
     <property id="DigitalBackgroundColor" type="number">0xAAAAAA</property>
-    <property id="ForegroundColor" type="number">0x000000</property>
+    <property id="ForegroundColor" type="number">0xffffff</property>
     
-    <property id="Numbers" type="number">2</property>
-    <property id="QuarterNumbersColor" type="number">0x000000</property>
-    <property id="NumbersColor" type="number">0x000000</property>
-    <property id="markslenth" type="number">4</property>
+    <property id="Numbers" type="number">3</property>
+    <property id="QuarterNumbersColor" type="number">0x555555</property>
+    <property id="NumbersColor" type="number">0xffffff</property>
+    <property id="markslenth" type="number">3</property>
     <property id="MinutesColor" type="number">0x00AAFF</property>
    
-    <property id="HandsForm" type="number">1</property>
-    <property id="HandsColor1" type="number">0xFF0000</property>
+    <property id="HandsForm" type="number">5</property>
+    <property id="HandsColor1" type="number">0x0000FF</property>
     <property id="HandsColor2" type="number">0xAA0000</property>
     
-    <property id="HandOutlinesEnable" type="boolean">true</property>
+    <property id="HandOutlinesEnable" type="boolean">false</property>
     <property id="HandsOutlineColor" type="number">0xFFFFFF</property>
     
  	<property id="SecHandEnable" type="boolean">true</property>

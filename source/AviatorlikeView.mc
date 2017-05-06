@@ -629,19 +629,23 @@ function drawBattery(dc) {
 // Handle the update event-----------------------------------------------------------------------
     function onUpdate(dc) {
     
-   	//Sys.println("width = " + width);
+   	Sys.println("width = " + width);
 	//Sys.println("height = " + height);
 
           
         
   // Clear the screen--------------------------------------------
         //dc.setColor(App.getApp().getProperty("BackgroundColor"), Gfx.COLOR_TRANSPARENT));
-        var BGColor=0x000000;
-        BGColor=App.getApp().getProperty("BackgroundColor");
-        if (BGColor==0x000001) {
-        	BGColor=App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB");
+        //var BGColor=0x000001;
+        //var BGColor = App.getApp().getProperty("BackgroundColor");
+        if (App.getApp().getProperty("SixbitBackground")==true) {
+        	Sys.println("6bit ");
+        	dc.setColor(Gfx.COLOR_TRANSPARENT,App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB"));
         	}
-        dc.setColor(Gfx.COLOR_TRANSPARENT, BGColor);
+        	else {
+        	Sys.println("4-bit color");
+        	dc.setColor(Gfx.COLOR_TRANSPARENT, App.getApp().getProperty("BackgroundColor"));
+        	}
         dc.clear();
       
    // Draw the hash marks ---------------------------------------------------------------------------
@@ -686,11 +690,12 @@ function drawBattery(dc) {
 			//Indicators-------------------------------------------------------------	
 		 	 //messages 
 			var messages = Sys.getDeviceSettings().notificationCount;
- 	     	var offcenter=35;
+ 	     	var offcenter=45;
  	     	
  	     	dc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);     		     	
  	     	if (ShowAlmMsgCount) {
- 	     		dc.drawText(width / 2 + offcenter, height / 2 -15, fontLabel, messages, Gfx.TEXT_JUSTIFY_CENTER);}
+ 	     		//dc.drawText(width / 2 + offcenter, height / 2 -15, fontLabel, messages, Gfx.TEXT_JUSTIFY_CENTER);
+ 	     		dc.drawText(width / 2 + offcenter, height / 2 +4 -dc.getFontHeight(Gfx.FONT_TINY), Gfx.FONT_TINY, messages, Gfx.TEXT_JUSTIFY_CENTER);}
  	     	else {
  	     		if (messages > 0) {
  	     		    dc.fillCircle(width / 2 + offcenter, height / 2 -7, 5);}
@@ -766,11 +771,11 @@ function drawBattery(dc) {
 
 		if (UpperDispEnable) {
 			var displayInfo = (App.getApp().getProperty("UDInfo"));
-			var DigitalBGColor = 0x000000;
+			
 			setLabel(displayInfo);
 			//background for upper display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {
-				dc.setColor(DigitalBGColor, Gfx.COLOR_TRANSPARENT);  
+				dc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
 	       		dc.fillRoundedRectangle(ULBGx, ULBGy , ULBGwidth, 30, 5);
 			}
 			      	      	 
@@ -784,12 +789,12 @@ function drawBattery(dc) {
 	 //Anzeige unteres Display--------------------------  
 		if (LowerDispEnable) {
 			var displayInfo = (App.getApp().getProperty("LDInfo"));
-			var DigitalBGColor = 0x000000;
+			
 			setLabel(displayInfo);
 			//background for upper display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {
-				dc.setColor(DigitalBGColor, Gfx.COLOR_TRANSPARENT);  
-	       		dc.fillRoundedRectangle(ULBGx, ULBGy , ULBGwidth, 30, 5);
+				dc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
+	       		dc.fillRoundedRectangle(LLBGx, LLBGy , ULBGwidth, 30, 5);
 			}
       	      	 
         	dc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
