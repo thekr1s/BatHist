@@ -228,12 +228,18 @@ class AviatorlikeView extends Ui.WatchFace{
 			dc.setPenWidth(1);
 			//dc.setColor(App.getApp().getProperty("BackgroundColor"), Gfx.COLOR_TRANSPARENT); 
 			//dc.setColor(0xff0000, Gfx.COLOR_TRANSPARENT);
-			var BGColor=0xff0000;
+			/*var BGColor=0xff0000;
         	BGColor=App.getApp().getProperty("BackgroundColor");
         	if (BGColor==0x000001) {
         		BGColor=App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB");
         	}
-        	dc.setColor(BGColor, Gfx.COLOR_TRANSPARENT);
+        	dc.setColor(BGColor, Gfx.COLOR_TRANSPARENT);*/
+        	if (App.getApp().getProperty("SixbitBackground")==true) {
+        	dc.setColor(App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB"), Gfx.COLOR_TRANSPARENT);
+        	}
+        	else {
+        	dc.setColor(App.getApp().getProperty("BackgroundColor"), Gfx.COLOR_TRANSPARENT);
+        	}
         	dc.drawLine(center_x+r2*Math.sin(alpha),center_y-r2*Math.cos(alpha), center_x+r1*Math.sin(alpha),center_y-r1*Math.cos(alpha));
 			
 			//Sys.println(alpha + " - " + (2 * Math.PI / 2));   		
@@ -639,11 +645,9 @@ function drawBattery(dc) {
         //var BGColor=0x000001;
         //var BGColor = App.getApp().getProperty("BackgroundColor");
         if (App.getApp().getProperty("SixbitBackground")==true) {
-        	Sys.println("6bit ");
         	dc.setColor(Gfx.COLOR_TRANSPARENT,App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB"));
         	}
         	else {
-        	Sys.println("4-bit color");
         	dc.setColor(Gfx.COLOR_TRANSPARENT, App.getApp().getProperty("BackgroundColor"));
         	}
         dc.clear();
@@ -771,7 +775,6 @@ function drawBattery(dc) {
 
 		if (UpperDispEnable) {
 			var displayInfo = (App.getApp().getProperty("UDInfo"));
-			
 			setLabel(displayInfo);
 			//background for upper display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {
@@ -789,7 +792,6 @@ function drawBattery(dc) {
 	 //Anzeige unteres Display--------------------------  
 		if (LowerDispEnable) {
 			var displayInfo = (App.getApp().getProperty("LDInfo"));
-			
 			setLabel(displayInfo);
 			//background for upper display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {

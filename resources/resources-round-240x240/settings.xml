@@ -31,7 +31,7 @@
     <setting propertyKey="@Properties.CenterDotEnable" title="@Strings.CenterDotEnableTitle">
         <settingConfig type="boolean" />
     </setting>
-    
+
     <setting propertyKey="@Properties.BackgroundColor" title="@Strings.BackgroundColorTitle">
         <settingConfig type="list">
             <listEntry value="0x000000">@Strings.ColorBlack</listEntry>        
