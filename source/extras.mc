@@ -10,7 +10,7 @@ using Toybox.Graphics as Gfx;
 
 module extras{
 
-	var lastLoc;
+	var lastLoc=null;
 		
      function getMoment(now,what) {
 		return SunCalc.calculate(now, lastLoc[0], lastLoc[1], what);
@@ -29,8 +29,20 @@ module extras{
      	//var alms = new AviatorlikeView();      
 	        
       
-		if(actInfo.currentLocation!=null){
-    		lastLoc = actInfo.currentLocation.toRadians();
+		if(actInfo.currentLocation!=null) {
+			lastLoc = actInfo.currentLocation.toRadians();
+			if (App.getApp().getProperty("storedLoc")!=lastLoc){
+				App.getApp().setProperty("storedLoc",lastLoc);
+				}
+			}
+			else {
+				lastLoc=App.getApp().getProperty("storedLoc");
+				}
+				
+		
+		if (lastLoc != null)
+		{
+    		
     		var sunrise_moment = getMoment(moment,SUNRISE);
     		var sunset_moment = getMoment(moment,SUNSET);
 			
