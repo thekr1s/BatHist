@@ -36,10 +36,21 @@
     <string id="BatProgressEnableTitle">Enable battery progress marker</string>
     <string id="StepProgressEnableTitle">Enable step progress marker</string>
     <string id="HandOutlinesEnableTitle">Enable outline around some hands</string>
-    <string id="SunMarkersEnableTitle">Enable sunrise/sunset markers</string>
+    <string id="SunMarkersEnableTitle">Enable sunrise/sunset markers (only round watches)</string>
     <string id="MoonEnableTitle">Enable moon phase on pos. 3 o´clock</string>
-    <string id="AlmMsgEnableTitle">Enable Alm / Msg indicators</string>
-    <string id="AlmMsgCountTitle">Show quantity of Alms / Msgs</string>
+    <string id="MoveBarEnableTitle">Enable inaktivity move bar </string>
+    
+    <string id="AlmMsgEnableTitle">Enable center indicators</string>
+	<string id="AlmMsgTitle">indicator info</string>
+    <string id="IF1">Alm/Msg count</string>
+    <string id="IF2">Alm/Msg only indicator</string>
+    <string id="IF3">Day and week of year</string>
+    <string id="IF4">sunrise / sunset</string>
+    <string id="IF5">elevation / distance</string>
+    <string id="IF6">stepgoal / steps</string>
+    
+    
+    
     <string id="CenterDotEnableTitle">Enable center dot as BT indicator</string>
     
 
@@ -86,28 +97,18 @@
     <string id="DF7">MM/DD/YYYY</string>
     
    
-    <string id="UDDate">Date</string>
-    <string id="UDSteps">Steps</string>
-    <string id="UDStepstogo">Steps to go</string>
-	<string id="UDDigitalClock">Dual time</string>
-	<string id="UDAltitude">Elevation</string>
-	<string id="UDCalories">Calories</string>
-	<string id="UDDistance">Distance</string>
-	<string id="UDBattery">Battery</string>
-	<string id="UDDayWeek">Day and week of year</string>
-	<string id="UDSunsetRise">next/over next sun event</string>
-	
-    
-    <string id="LDDate">Date</string>
-    <string id="LDSteps">Steps</string>
-    <string id="LDStepstogo">Steps to go</string>
-	<string id="LDDigitalClock">Dual time</string>
-	<string id="LDAltitude">Elevation</string>
-	<string id="LDCalories">Calories</string>
-	<string id="LDDistance">Distance</string>
-	<string id="LDBattery">Battery</string>
-	<string id="LDDayWeek">Day and week of year</string>
-	<string id="LDSunsetRise">next/over next sun event</string>
+    <string id="DDate">Date</string>
+    <string id="DSteps">Steps</string>
+    <string id="DStepstogo">Steps to go</string>
+    <string id="DStepGraph">Step histories graphic</string>
+	<string id="DDigitalClock">Dual time</string>
+	<string id="DAltitude">Elevation</string>
+	<string id="DCalories">Calories</string>
+	<string id="DDistance">Distance</string>
+	<string id="DBattery">Battery</string>
+	<string id="DDayWeek">Day and week of year</string>
+	<string id="DSunsetRise">sunrise / sunset</string>
+	<string id="DHR">Heart rate</string>
 
 	<string id="HandsRace">Race</string>
 	<string id="HandsPilot">Pilot</string>

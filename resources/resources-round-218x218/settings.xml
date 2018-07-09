@@ -20,13 +20,24 @@
         <settingConfig type="boolean" />
     </setting>
     
+    <setting propertyKey="@Properties.MoveBarEnable" title="@Strings.MoveBarEnableTitle">
+        <settingConfig type="boolean" />
+    </setting>
+    
     <setting propertyKey="@Properties.AlmMsgEnable" title="@Strings.AlmMsgEnableTitle">
         <settingConfig type="boolean" />
     </setting>
     
-     <setting propertyKey="@Properties.ShowAlmMsgCount" title="@Strings.AlmMsgCountTitle">
-         <settingConfig type="boolean" />
-     </setting>
+    <setting propertyKey="@Properties.AlmMsg" title="@Strings.AlmMsgTitle">
+        <settingConfig type="list">
+            <listEntry value="1">@Strings.IF1</listEntry>       
+            <listEntry value="2">@Strings.IF2</listEntry>  
+            <listEntry value="3">@Strings.IF3</listEntry>
+            <listEntry value="4">@Strings.IF4</listEntry> 
+            <listEntry value="5">@Strings.IF5</listEntry> 
+            <listEntry value="6">@Strings.IF6</listEntry>  
+        </settingConfig>
+    </setting>
     
     <setting propertyKey="@Properties.CenterDotEnable" title="@Strings.CenterDotEnableTitle">
         <settingConfig type="boolean" />
@@ -358,16 +369,18 @@
    
     <setting propertyKey="@Properties.UDInfo" title="@Strings.UDInfoTitle">
         <settingConfig type="list">
-         	<listEntry value="1">@Strings.UDDate</listEntry>
-            <listEntry value="2">@Strings.UDSteps</listEntry>
-            <listEntry value="3">@Strings.UDStepstogo</listEntry>       
-            <listEntry value="4">@Strings.UDDigitalClock</listEntry>
-            <listEntry value="5">@Strings.UDAltitude</listEntry>
-            <listEntry value="6">@Strings.UDCalories</listEntry>
-            <listEntry value="7">@Strings.UDDistance</listEntry>
-            <listEntry value="8">@Strings.UDBattery</listEntry>
-            <listEntry value="9">@Strings.UDDayWeek</listEntry>
-            <listEntry value="10">@Strings.UDSunsetRise</listEntry>
+         	<listEntry value="1">@Strings.DDate</listEntry>
+            <listEntry value="2">@Strings.DSteps</listEntry>
+            <listEntry value="3">@Strings.DStepstogo</listEntry> 
+            <listEntry value="4">@Strings.DStepGraph</listEntry>                  
+            <listEntry value="5">@Strings.DDigitalClock</listEntry>
+            <listEntry value="6">@Strings.DAltitude</listEntry>
+            <listEntry value="7">@Strings.DCalories</listEntry>
+            <listEntry value="8">@Strings.DDistance</listEntry>
+            <listEntry value="9">@Strings.DBattery</listEntry>
+            <listEntry value="10">@Strings.DDayWeek</listEntry>
+            <listEntry value="11">@Strings.DSunsetRise</listEntry>
+            <listEntry value="12">@Strings.DHR</listEntry>
         </settingConfig>
     </setting>
    
@@ -377,16 +390,18 @@
     
     <setting propertyKey="@Properties.LDInfo" title="@Strings.LDInfoTitle">
         <settingConfig type="list">
-        	<listEntry value="1">@Strings.LDDate</listEntry>
-            <listEntry value="2">@Strings.LDSteps</listEntry> 
-            <listEntry value="3">@Strings.LDStepstogo</listEntry>       
-            <listEntry value="4">@Strings.LDDigitalClock</listEntry>
-            <listEntry value="5">@Strings.LDAltitude</listEntry>
-            <listEntry value="6">@Strings.LDCalories</listEntry>
-            <listEntry value="7">@Strings.LDDistance</listEntry>
-            <listEntry value="8">@Strings.LDBattery</listEntry>
-            <listEntry value="9">@Strings.LDDayWeek</listEntry>
-            <listEntry value="10">@Strings.LDSunsetRise</listEntry>
+        	<listEntry value="1">@Strings.DDate</listEntry>
+            <listEntry value="2">@Strings.DSteps</listEntry> 
+            <listEntry value="3">@Strings.DStepstogo</listEntry>       
+            <listEntry value="4">@Strings.DStepGraph</listEntry>                  
+            <listEntry value="5">@Strings.DDigitalClock</listEntry>
+            <listEntry value="6">@Strings.DAltitude</listEntry>
+            <listEntry value="7">@Strings.DCalories</listEntry>
+            <listEntry value="8">@Strings.DDistance</listEntry>
+            <listEntry value="9">@Strings.DBattery</listEntry>
+            <listEntry value="10">@Strings.DDayWeek</listEntry>
+            <listEntry value="11">@Strings.DSunsetRise</listEntry>
+            <listEntry value="12">@Strings.DHR</listEntry>
         </settingConfig>
     </setting>
 

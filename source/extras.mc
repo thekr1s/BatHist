@@ -10,41 +10,40 @@ using Toybox.Graphics as Gfx;
 
 module extras{
 
-	var lastLoc=null;
-		
-     function getMoment(now,what) {
-		return SunCalc.calculate(now, lastLoc[0], lastLoc[1], what);
-	}		
-
  function drawSunMarkers(dc) {
 	// Draw Sunset / sunrise markers -------------------------------------------------------------------------
         
         var alphaSunrise = 0;
         var alphaSunset = 0;
         var hand; 
-        
-		var moment = Time.now();
-	    var info_date = Calendar.info(moment, Time.FORMAT_LONG);
-     	var actInfo = Act.getActivityInfo(); 
-     	//var alms = new AviatorlikeView();      
-	        
-      
-		if(actInfo.currentLocation!=null) {
-			lastLoc = actInfo.currentLocation.toRadians();
-			if (App.getApp().getProperty("storedLoc")!=lastLoc){
-				App.getApp().setProperty("storedLoc",lastLoc);
-				}
-			}
-			else {
-				lastLoc=App.getApp().getProperty("storedLoc");
-				}
-				
-		
-		if (lastLoc != null)
+
+	   
+	   	var sc = new SunCalc();
+		var lat;
+		var lon;		
+		var loc = Act.getActivityInfo().currentLocation;
+
+		if (loc == null)
 		{
-    		
-    		var sunrise_moment = getMoment(moment,SUNRISE);
-    		var sunset_moment = getMoment(moment,SUNSET);
+			lat = App.getApp().getProperty(LAT);
+			lon = App.getApp().getProperty(LON);
+		} 
+		else
+		{
+			lat = loc.toDegrees()[0] * Math.PI / 180.0;
+			App.getApp().setProperty(LAT, lat);
+			lon = loc.toDegrees()[1] * Math.PI / 180.0;
+			App.getApp().setProperty(LON, lon);
+		}
+
+//		lat = 52.375892 * Math.PI / 180.0;
+//		lon = 9.732010 * Math.PI / 180.0;
+
+		if(lat != null && lon != null)
+		{
+			var now = new Time.Moment(Time.now().value());			
+			var sunrise_moment = sc.calculate(now, lat.toDouble(), lon.toDouble(), SUNRISE);
+			var sunset_moment = sc.calculate(now, lat.toDouble(), lon.toDouble(), SUNSET);
 			
 			var sunriseTinfo = Time.Gregorian.info(new Time.Moment(sunrise_moment.value() + 30), Time.FORMAT_SHORT);
 			var sunsetTinfo = Time.Gregorian.info(new Time.Moment(sunset_moment.value() + 30), Time.FORMAT_SHORT);
@@ -60,7 +59,7 @@ module extras{
         	var center_y = dc.getHeight() / 2;
      
 			r1 = dc.getWidth()/2 - outerRad; //outside
-			r2 = r1 -lenth; ////Länge des Bat-Zeigers
+			r2 = r1 -lenth; ////Länge des Zeigers
      
 			dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
 			dc.setPenWidth(2);		
