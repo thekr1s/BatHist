@@ -991,7 +991,7 @@ function drawBattery(dc) {
 
 	
 //draw move bar (inactivity alarm)----------------------
-Sys.println("moveBarLevel "+ ActMonitor.getInfo().moveBarLevel);
+//Sys.println("moveBarLevel "+ ActMonitor.getInfo().moveBarLevel);
 var showMoveBar = (App.getApp().getProperty("MoveBarEnable"));
 
 var setY = ULBGy + 40 ;
