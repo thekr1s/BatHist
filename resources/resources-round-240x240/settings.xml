@@ -293,6 +293,10 @@
             <listEntry value="0xFF00FF">@Strings.ColorPink</listEntry>
         </settingConfig>
     </setting>
+
+    <setting propertyKey="@Properties.HandsBehind" title="@Strings.HandsBehindTitle">
+    	<settingConfig type="boolean" />
+    </setting>
     
     <setting propertyKey="@Properties.SecHandEnable" title="@Strings.SecHandEnableTitle">
         <settingConfig type="boolean" />

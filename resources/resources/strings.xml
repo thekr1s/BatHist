@@ -21,6 +21,7 @@
     <string id="HandsColor1Title">First color of hands</string>
     <string id="HandsColor2Title">Second color of hands</string>
     <string id="HandsOutlineColorTitle">Hands outline color</string>
+    <string id="HandsBehindTitle">Hands behind some displays</string>
     <string id="SecHandsFormTitle">Kind of second hand</string>   
     <string id="SecHands1ColorTitle">First color of second hand</string>
     <string id="SecHands2ColorTitle">Second color of second hand</string>
