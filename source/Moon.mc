@@ -38,7 +38,7 @@ class Moon {
 	    if (r < 0) {
 	        r = r + 30;
 	    }
-	    return 16; //r;
+	    return r;
     }
     function updateable_calcmoonphase(dc, dateinfo, hour) {
     	if (t_phase != dateinfo.day) {
