@@ -1,5 +1,5 @@
 <strings>
-	<string id="AppName">Aviatorlike</string>
+	<string id="AppName">ReverseAviatorlike</string>
 	<string id="AppVersionTitle">Version</string>
 	
 	<string id="none">None</string>
@@ -16,7 +16,7 @@
     <string id="QuarterNumbersColorTitle">Color of 5 minutes marks</string>
     <string id="NumbersColorTitle">Color of numbers</string>
     <string id="MinutesColorTitle">Color of minutes marks</string>
-    <string id="markslenthTitle">lenth of minutes marks (0-5) </string> 
+    <string id="markslenthTitle">length of minutes marks (0-5) </string> 
     <string id="HandsFormTitle">Kind of hands</string>
     <string id="HandsColor1Title">First color of hands</string>
     <string id="HandsColor2Title">Second color of hands</string>
@@ -170,5 +170,6 @@
 	<string id="TZVal1300">13:00 Phoenix Islands, Samoa, Tonga</string>
 	<string id="TZVal1400">14:00 Line Islands</string>
 	<string id="ReverseTitle">Reverse hand rotation</string>
+	<string id="UseIconsTitle">Use icons where possible</string>
 
 </strings>

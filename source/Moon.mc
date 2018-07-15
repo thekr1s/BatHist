@@ -19,38 +19,30 @@ class Moon {
 		moon_width = width;
 		moonx = x;
 		moony = y;
-//		t_phase = -1;
+		t_phase = -1;
 	}	
 		
 	
     function calcmoonphase(day, month, year) {
-    //	Sys.println(day + "." + month + "." + year);  // berechnet am "4.6.2017"
-    
-	    var r = (year % 100); 		// 2017 modulo 100 = 17 --> 2017 / 100 = 2000 Rest 17
-		r = (r % 19);  				// 17 modulo 19 = 19 --> 17 / 19 = 0 Rest 17
+	    var r = (year % 100);
+		r = (r % 19);
 	    if (r>9) { 
-	        r = r - 19; 			// r = -2
-	        //!Sys.println("r0 = " + r);
+	        r = r - 19;
 	    }
-		r = ((r * 11) % 30) + month + day;  	//= ((-2 * 11) % 30) = -22 --> -22 + 6 + 4 = -12
-		//!Sys.println("r1 = " + r);
-		 
+		r = ((r * 11) % 30) + month + day;
 	    if (month<3) {
-	        r = r + 2;				//wenn Jan-Mrz : --> r = 17 +2 = 19
+	        r = r + 2;
 	    }
-	    r = 1.0*r - 8.3 + 0.5;		//sonst: 1.0 * -12 = -12 -8.3 + 0,5 = -19,8
-	    //!Sys.println("r2 = " + r);
-	    
-		r = (r.toNumber() % 30);	//-19,8 modulo 30 = 10,8
-	    if (r < 0) {				
-	        r = r + 30;				//wenn < 0 = r + 30
+	    r = 1.0*r - 8.3 + 0.5;
+		r = (r.toNumber() % 30);
+	    if (r < 0) {
+	        r = r + 30;
 	    }
-	    //!Sys.println(" r = " + r);
-	    return r;					//11 (ganze Zahl)
+	    return 16; //r;
     }
     function updateable_calcmoonphase(dc, dateinfo, hour) {
-//    	if (t_phase != dateinfo.day) {
-//    		t_phase = dateinfo.day;
+    	if (t_phase != dateinfo.day) {
+    		t_phase = dateinfo.day;
 
     		c_phase = calcmoonphase(dateinfo.day , dateinfo.month, dateinfo.year);
 			if (hour > 12) { // change it at noon
@@ -59,7 +51,7 @@ class Moon {
 
 			calc_drawmoon(c_phase);// updates c_moon_label and c_moon_y
 
-//    	}
+    	}
     	
     	drawmoon(dc, moonx, moony); // uses c_moon_y
     	
@@ -67,7 +59,7 @@ class Moon {
     }
 
 	function drawmoon(dc, moonx, moony) {
-        dc.drawBitmap(moonx, moony, moon_bitmap);
+        dc.drawBitmap(moonx+2, moony+2, moon_bitmap);
 		var x, xby2;
 		//var BGColor = App.getApp().getProperty("BackgroundColor");
         if (App.getApp().getProperty("SixbitBackground")) {
@@ -76,6 +68,7 @@ class Moon {
         	else {
         	dc.setColor(App.getApp().getProperty("BackgroundColor"),Gfx.COLOR_TRANSPARENT);
         	}
+//dc.setColor(Gfx.COLOR_BLACK,Gfx.COLOR_TRANSPARENT);
         /*if (BGColor==0x000001) {
         		BGColor=App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB");
         	}
@@ -107,7 +100,7 @@ class Moon {
 		var rSrest= 0; 
 		var edgelight = false;
 		if (moonphase <= 8) {
-      		c_moon_label = "wax";
+      		c_moon_label = "wax.";
 			r1edge = intc; rSedge = step;
 			r1rest = intc; rSrest = -step;
 			edgelight = true;
@@ -120,7 +113,7 @@ class Moon {
 			}
 		} else {
 			if (moonphase <=16) {
-	      		c_moon_label = "wax";
+	      		c_moon_label = "wax.";
 				r1rest = -1; rSrest = 0;
 				r1edge = intc; rSedge = -step;
 				edgelight = false;
@@ -129,7 +122,7 @@ class Moon {
 					r1edge = -1; rSedge = 0;
 				}
 			} else {
-	      		c_moon_label = "wan";
+	      		c_moon_label = "wan.";
 				if (moonphase <=23) {
 					r1rest = -1; rSrest = 0;
 					r1edge = intc; rSedge = step;

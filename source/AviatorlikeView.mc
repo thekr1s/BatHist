@@ -36,6 +36,7 @@ class AviatorlikeView extends Ui.WatchFace{
 	    var isAwake;
 	    var screenShape;
 	    var fontLabel;
+	    var fontIcons;
 	    
 	    var clockTime;
 	    
@@ -56,6 +57,7 @@ class AviatorlikeView extends Ui.WatchFace{
     function initialize() {
         WatchFace.initialize();        
 	    fontLabel = Ui.loadResource(Rez.Fonts.id_font_label);
+	    fontIcons = Ui.loadResource(Rez.Fonts.id_font_icons);
         screenShape = Sys.getDeviceSettings().screenShape;                  
         Sys.println("Screenshape = " + screenShape);
      
@@ -94,7 +96,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		    
 		   	moonx = 165;
 		   	moony = 89;
-		   	moonwidth = 40; 		
+		   	moonwidth = 38; 		
 		}
 		if (width == 240 && height == 240) {
 			Sys.println("device:" + "Fenix5 240");
@@ -119,8 +121,8 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	LLINFOy = 148; 
 		    
 		   	moonx = 185;
-		   	moony = 100;
-		   	moonwidth = 40; 		
+		   	moony = 99;
+		   	moonwidth = 38; 		
 		}
 		if (width == 215 && height == 180) {
 			Sys.println("device:" + "Semiround");
@@ -145,7 +147,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	LLINFOy = 111; 
 		    
 		   	moonx = 165;
-		   	moony = 72;
+		   	moony = 71;
 		   	moonwidth = 36; 		
 		}                            
     }
@@ -156,16 +158,18 @@ class AviatorlikeView extends Ui.WatchFace{
     function drawHashMarks(dc) {
 
             var n;      
-        	var alpha, r1, r2;
+        	var alpha, beta, r1, r2;
 
         	//alle 5 minutes
             dc.setPenWidth(3);
             dc.setColor(App.getApp().getProperty("MinutesColor"), Gfx.COLOR_TRANSPARENT);
            	r1 = width/2 -5; //inside
-			r2 = width/2 ; //outside
-           	for (var alpha = Math.PI / 6; alpha <= 13 * Math.PI / 6; alpha += (Math.PI / 30)) { //jede Minute 			
-				dc.drawLine(center_x+r1*Math.sin(alpha),center_y-r1*Math.cos(alpha), center_x+r2*Math.sin(alpha),center_y-r2*Math.cos(alpha)); 
-
+			r2 = width/2 +1; //outside. Yeah, I know that's making the radius longer than the screen, but it makes the tic marks render nicer
+//           	for (var alpha = Math.PI / 6; alpha <= 13 * Math.PI / 6; alpha += (Math.PI / 30)) { //jede Minute
+           	for (var alpha = Math.PI / 30; alpha <= 2 * Math.PI ; alpha += (Math.PI / 6)) { //jede Minute 
+           		for (var beta = 0; beta <= (Math.PI / 10); beta += (Math.PI/30)) {          	 			
+					dc.drawLine(center_x+r1*Math.sin(alpha+beta),center_y-r1*Math.cos(alpha+beta), center_x+r2*Math.sin(alpha+beta),center_y-r2*Math.cos(alpha+beta)); 
+				}
      		}
         
         	//alle 5 minutes
@@ -173,7 +177,7 @@ class AviatorlikeView extends Ui.WatchFace{
             dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
            	//r1 = width/2 -20; //inside
            	r1 = width/2 - (5 * App.getApp().getProperty("markslenth"));
-			r2 = width/2 ; //outside
+			//r2 = width/2 +1; //outside- redundant
            	//for (var alpha = Math.PI / 6; alpha <= 13 * Math.PI / 6; alpha += (Math.PI / 30)) { //jede Minute
          	for (var alpha = Math.PI / 6; alpha <= 11 * Math.PI / 6; alpha += (Math.PI / 3)) { //jede 5. Minute  			
 				dc.drawLine(center_x+r1*Math.sin(alpha),center_y-r1*Math.cos(alpha), center_x+r2*Math.sin(alpha),center_y-r2*Math.cos(alpha)); 
@@ -830,7 +834,7 @@ function drawBattery(dc) {
        	}
        
        if (screenShape == 1) {  // round
-   		    if ( NbrFont == 1) { //fat
+   		    if ( NbrFont == 1) { //fat 12 only
 	    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
 	    		dc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 	    	}            
@@ -1169,13 +1173,15 @@ var setX = center_x;
     	 }     	
      	
   // Center Point with Bluetooth connection
-  	var CenterDotEnable = (App.getApp().getProperty("CenterDotEnable"));
-  	if (CenterDotEnable) {
+	  	if ((App.getApp().getProperty("CenterDotEnable"))) {
   	
   		if (Sys.getDeviceSettings().phoneConnected) {
   			dc.setColor((App.getApp().getProperty("HandsColor1")), Gfx.COLOR_TRANSPARENT);
 	   	} else {
   			dc.setColor((App.getApp().getProperty("BackgroundColor")), Gfx.COLOR_TRANSPARENT);
+  			/*dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+  			dc.drawText(width / 2, height / 2 -12, fontIcons, "4" , Gfx.TEXT_JUSTIFY_CENTER);
+  			dc.setColor(Gfx.COLOR_TRANSPARENT, Gfx.COLOR_TRANSPARENT);*/
 	   	} 
 	
 	} else {

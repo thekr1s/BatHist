@@ -41,6 +41,10 @@
         <settingConfig type="boolean" />
     </setting>
 
+    <setting propertyKey="@Properties.UseIcons" title="@Strings.UseIconsTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
 
     <setting propertyKey="@Properties.BackgroundColor" title="@Strings.BackgroundColorTitle">
         <settingConfig type="list">

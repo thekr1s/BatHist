@@ -1,6 +1,6 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap id="moon" filename="2-bit-36x36-moon.png"  >         
+    <bitmap id="moon" filename="2-bit-34x34-moon.png"  >         
     	<palette disableTransparency="false">
             <color>000000</color>
             <color>555555</color>
