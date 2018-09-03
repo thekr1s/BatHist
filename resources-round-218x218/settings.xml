@@ -39,9 +39,23 @@
         </settingConfig>
     </setting>
     
-    <setting propertyKey="@Properties.CenterDotEnable" title="@Strings.CenterDotEnableTitle">
+<!-- Using different method for BT indicator. Next setting down
+     <setting propertyKey="@Properties.CenterDotEnable" title="@Strings.CenterDotEnableTitle">
         <settingConfig type="boolean" />
     </setting>
+-->
+
+    <setting propertyKey="@Properties.ConnectionIndicator" title="@Strings.ConnectionIndicatorTitle"
+    prompt="@Strings.CIPrompt">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.CI0</listEntry>       
+            <listEntry value="1">@Strings.CI1</listEntry>       
+            <listEntry value="2">@Strings.CI2</listEntry>  
+            <listEntry value="3">@Strings.CI3</listEntry>
+            <listEntry value="4">@Strings.CI4</listEntry>
+        </settingConfig>
+    </setting>
+
 
     <setting propertyKey="@Properties.UseIcons" title="@Strings.UseIconsTitle">
         <settingConfig type="boolean" />

@@ -42,7 +42,7 @@
     <string id="MoveBarEnableTitle">Enable inactivity move bar </string>
     
     <string id="AlmMsgEnableTitle">Enable center indicators</string>
-	<string id="AlmMsgTitle">indicator info</string>
+	<string id="AlmMsgTitle">Indicator info</string>
     <string id="IF1">Alm/Msg count</string>
     <string id="IF2">Alm/Msg only indicator</string>
     <string id="IF3">Day and week of year</string>
@@ -54,6 +54,14 @@
     
     <string id="CenterDotEnableTitle">Enable center dot as BT indicator</string>
     
+    <string id="ConnectionIndicatorTitle">Show connection indicator</string>
+    <string id="CI0">No connection indicator</string>
+    <string id="CI1">Center dot as BT indicator</string>
+    <string id="CI2">12 o'clock phone connected icon</string>
+    <string id="CI3">12 o'clock slash phone icon</string>
+    <string id="CI4">12 o'clock indicator for BT state</string>
+    
+    <string id="CIPrompt">How to show whether or not there is a connection to the phone</string>
 
     <string id="ColorBlack">Black</string>
     <string id="ColorDarkGray">Dark Gray</string>

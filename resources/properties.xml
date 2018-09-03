@@ -10,6 +10,8 @@
 	<property id="AlmMsgEnable" type="boolean">true</property>
 	<property id="AlmMsg" type="number">1</property>
 	<property id="CenterDotEnable" type="boolean">true</property>
+	<property id="ConnectionIndicator" type="number">2</property>
+	
 	
     <property id="SixbitBackground" type="boolean">false</property>
     <property id="UseIcons" type="boolean">false</property>
