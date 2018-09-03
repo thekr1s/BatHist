@@ -12,10 +12,6 @@
         <settingConfig type="boolean" />
     </setting>
     
-    <setting propertyKey="@Properties.SunMarkersEnable" title="@Strings.SunMarkersEnableTitle">
-        <settingConfig type="boolean" />
-    </setting>
-    
     <setting propertyKey="@Properties.MoonEnable" title="@Strings.MoonEnableTitle">
         <settingConfig type="boolean" />
     </setting>
@@ -28,7 +24,7 @@
     <setting propertyKey="@Properties.AlmMsgEnable" title="@Strings.AlmMsgEnableTitle">
         <settingConfig type="boolean" />
     </setting>
-    
+
     <setting propertyKey="@Properties.AlmMsg" title="@Strings.AlmMsgTitle">
         <settingConfig type="list">
             <listEntry value="1">@Strings.IF1</listEntry>       
@@ -36,17 +32,33 @@
             <listEntry value="3">@Strings.IF3</listEntry>
             <listEntry value="4">@Strings.IF4</listEntry> 
             <listEntry value="5">@Strings.IF5</listEntry>
-            <listEntry value="6">@Strings.IF6</listEntry>   
+            <listEntry value="6">@Strings.IF6</listEntry>  
         </settingConfig>
-    </setting>
+    </setting>    
     
-    <setting propertyKey="@Properties.CenterDotEnable" title="@Strings.CenterDotEnableTitle">
+    
+<!-- Using different method for BT indicator. Next setting down
+     <setting propertyKey="@Properties.CenterDotEnable" title="@Strings.CenterDotEnableTitle">
         <settingConfig type="boolean" />
     </setting>
+-->
+
+    <setting propertyKey="@Properties.ConnectionIndicator" title="@Strings.ConnectionIndicatorTitle"
+    prompt="@Strings.CIPrompt">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.CI0</listEntry>       
+            <listEntry value="1">@Strings.CI1</listEntry>       
+            <listEntry value="2">@Strings.CI2</listEntry>  
+            <listEntry value="3">@Strings.CI3</listEntry>
+            <listEntry value="4">@Strings.CI4</listEntry>
+        </settingConfig>
+    </setting>
+
 
     <setting propertyKey="@Properties.UseIcons" title="@Strings.UseIconsTitle">
         <settingConfig type="boolean" />
     </setting>
+
 
     <setting propertyKey="@Properties.BackgroundColor" title="@Strings.BackgroundColorTitle">
         <settingConfig type="list">
@@ -67,7 +79,7 @@
         </settingConfig>
     </setting>
     
-    <setting propertyKey="@Properties.SixbitBackground" title="@Strings.SixbitBackgroundTitle">
+        <setting propertyKey="@Properties.SixbitBackground" title="@Strings.SixbitBackgroundTitle">
         <settingConfig type="boolean" />
     </setting>
 
@@ -154,6 +166,7 @@
         </settingConfig>
     </setting>
     
+    
         <setting propertyKey="@Properties.NumbersColor" title="@Strings.NumbersColorTitle">
         <settingConfig type="list">
             <listEntry value="0x000000">@Strings.ColorBlack</listEntry>        
@@ -172,7 +185,6 @@
             <listEntry value="0xFF00FF">@Strings.ColorPink</listEntry>
         </settingConfig>
     </setting>
-    
     
             <setting propertyKey="@Properties.QuarterNumbersColor" title="@Strings.QuarterNumbersColorTitle">
         <settingConfig type="list">
@@ -230,12 +242,13 @@
         </settingConfig>
     </setting> 
     
-
-    
+   
    <setting propertyKey="@Properties.Reverse" title="@Strings.ReverseTitle">
    		<settingConfig type="boolean" />
    </setting>
+
     
+
     
     <setting propertyKey="@Properties.HandsColor1" title="@Strings.HandsColor1Title">
         <settingConfig type="list">
@@ -412,6 +425,7 @@
             <listEntry value="12">@Strings.DHR</listEntry>
         </settingConfig>
     </setting>
+
 
     <setting propertyKey="@Properties.DualTimeTZ" title="@Strings.DualTimeTZ">
         <settingConfig type="list">

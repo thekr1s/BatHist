@@ -433,7 +433,7 @@ module hands{
 		r1 = 35;
 		r2 = seconds_radius;
 		
-if (SecHandsForm == 1) { //classic		
+		if (SecHandsForm == 1) { //classic		
 			//untere Raute		
 			hand =        	[
 							[center_x+r0*Math.sin(alpha),center_y-r0*Math.cos(alpha)],						
@@ -448,7 +448,7 @@ if (SecHandsForm == 1) { //classic
 			dc.setColor(color2, Gfx.COLOR_TRANSPARENT);
 	        dc.setPenWidth(1);
 			for (n=0; n<4; n++) {
-			dc.drawLine(hand[n][0], hand[n][1], hand[n+1][0], hand[n+1][1]);
+				dc.drawLine(hand[n][0], hand[n][1], hand[n+1][0], hand[n+1][1]);
 			}
 			
 			

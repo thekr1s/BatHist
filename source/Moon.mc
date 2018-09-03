@@ -59,7 +59,7 @@ class Moon {
     }
 
 	function drawmoon(dc, moonx, moony) {
-        dc.drawBitmap(moonx+2, moony+2, moon_bitmap);
+        dc.drawBitmap(moonx+1, moony+1, moon_bitmap);
 		var x, xby2;
 		//var BGColor = App.getApp().getProperty("BackgroundColor");
         if (App.getApp().getProperty("SixbitBackground")) {
