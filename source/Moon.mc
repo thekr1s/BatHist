@@ -100,7 +100,7 @@ class Moon {
 		var rSrest= 0; 
 		var edgelight = false;
 		if (moonphase <= 8) {
-      		c_moon_label = "wax.";
+      		c_moon_label = "wax";
 			r1edge = intc; rSedge = step;
 			r1rest = intc; rSrest = -step;
 			edgelight = true;
@@ -113,7 +113,7 @@ class Moon {
 			}
 		} else {
 			if (moonphase <=16) {
-	      		c_moon_label = "wax.";
+	      		c_moon_label = "wax";
 				r1rest = -1; rSrest = 0;
 				r1edge = intc; rSedge = -step;
 				edgelight = false;
@@ -122,7 +122,7 @@ class Moon {
 					r1edge = -1; rSedge = 0;
 				}
 			} else {
-	      		c_moon_label = "wan.";
+	      		c_moon_label = "wan";
 				if (moonphase <=23) {
 					r1rest = -1; rSrest = 0;
 					r1edge = intc; rSedge = step;
