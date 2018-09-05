@@ -674,7 +674,7 @@ function drawBattery(dc) {
 	function drawStepGraph(dc,stepGraphposX, stepGraphposY, stepInfoX, stepInfoY) {
 		var activityHistory = ActMonitor.getHistory();
 	  	var histDays=activityHistory.size();
-	  	//Sys.println("histDays: " + histDays);
+	  	Sys.println("stepHistoryGraph histDays: " + histDays);
 	  		  	
 	  	var maxheight = 26.0;	  	
 	  	var stepHistory=0;
@@ -689,7 +689,7 @@ function drawBattery(dc) {
 	  	dc.setPenWidth(1);
 	  	//first draw empty graph---------------------------------------------------------
 	  	for(var i=0;i<7;i++) {	 
-	  		//Sys.println("i : " + i); 	
+	  		Sys.println("empty graph i : " + i); 	
 	  		//dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
 	  		dc.drawRectangle(graphposX, graphposY, 9, maxheight);
 	        graphposX = graphposX - 11;	        
@@ -697,6 +697,7 @@ function drawBattery(dc) {
 	  		  	
 	  if (histDays > 0) {	  	
 	  		graphposX = stepGraphposX;
+	  		
 		  	for(var i=0;i<histDays;i++) {
 		  		maxValue=stepHistory+activityHistory[i].stepGoal;
 		  		graphheight = maxheight / maxValue;		  		
@@ -707,7 +708,7 @@ function drawBattery(dc) {
 		  			graphheight = maxheight;
 		  		}
 		  		
-		  		//Sys.println("graphheight " + i + ": " + graphheight);	
+		  		Sys.println("graphheight " + i + ": " + graphheight);	
 		  		dc.fillRectangle(graphposX, graphposY+maxheight-graphheight, 8, graphheight);		  	
 		  		dc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
 		  		dc.drawRectangle(graphposX, graphposY, 9, maxheight);
@@ -1339,7 +1340,7 @@ function drawBattery(dc) {
 			targetDc.drawText(ULINFOx, ULINFOy, fontLabel, labelInfoText, Gfx.TEXT_JUSTIFY_RIGHT);
 			
 			if (displayInfo == 4) {
-			drawStepGraph(dc, ULTEXTx, ULTEXTy, ULINFOx, ULINFOy);
+			drawStepGraph(targetDc, ULTEXTx, ULTEXTy, ULINFOx, ULINFOy);
 			}	    				
 		}	
 		
@@ -1364,12 +1365,12 @@ function drawBattery(dc) {
 			targetDc.drawText(LLINFOx, LLINFOy, fontLabel, labelInfoText, Gfx.TEXT_JUSTIFY_RIGHT);
 			
 			if (displayInfo == 4) {
-			drawStepGraph(dc, LLTEXTx, LLTEXTy, LLINFOx, LLINFOy);
+			drawStepGraph(targetDc, LLTEXTx, LLTEXTy, LLINFOx, LLINFOy);
 			}	    				
 		}
 
 //Fadenkreuz-------------------------------------
-	  	dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+	  	//dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
 //	  	dc.setPenWidth(1);  	
 //		dc.drawLine(ULBGx, 0, ULBGx , height);
 //		dc.drawLine(ULBGx + ULBGwidth, 0, ULBGx + ULBGwidth , height);	
