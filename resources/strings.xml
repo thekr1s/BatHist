@@ -26,6 +26,11 @@
     <string id="SecHands1ColorTitle">First color of second hand</string>
     <string id="SecHands2ColorTitle">Second color of second hand</string>
     
+    <string id="SF0">No second hand</string>
+    <string id="SF1">Classic</string>
+    <string id="SF2">Simple</string>
+    <string id="SF3">Simple, 1Hz if possible</string>
+    
     <string id="DigiFontTitle">Font of displays</string>
     <string id="DateFormatTitle">Date format</string>
     <string id="UpperDispEnableTitle">Enable upper display</string>
@@ -57,9 +62,9 @@
     <string id="ConnectionIndicatorTitle">Show connection indicator</string>
     <string id="CI0">No connection indicator</string>
     <string id="CI1">Center dot as BT indicator</string>
-    <string id="CI2">12 o'clock phone connected icon</string>
-    <string id="CI3">12 o'clock slash phone icon</string>
-    <string id="CI4">12 o'clock indicator for BT state</string>
+    <string id="CI2">Phone connected icon at 12</string>
+    <string id="CI3">Phone disconnected icon at 12</string>
+    <string id="CI4">Phone state instead of 12</string>
     
     <string id="CIPrompt">How to show whether or not there is a connection to the phone</string>
 
@@ -106,6 +111,7 @@
     <string id="DF7">MM/DD/YYYY</string>
     
    
+    <string id="DNone">None</string>
     <string id="DDate">Date</string>
     <string id="DSteps">Steps</string>
     <string id="DStepstogo">Steps to go</string>

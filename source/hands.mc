@@ -399,7 +399,7 @@ module hands{
 
 
 
-	function drawSecondHands(dc) {        
+	function drawSecondHands(dc, SecHandsStyle) {        
           // the length of the minute hand
         
         var color1 = (App.getApp().getProperty("SecHands1Color"));
@@ -413,7 +413,7 @@ module hands{
         
         var reverseMultiplier= App.getApp().getProperty("Reverse") ? -1 : 1 ;
         
-        var SecHandsForm = (App.getApp().getProperty("SecHandsForm"));
+        //var SecHandsForm = (App.getApp().getProperty("SecHandsForm"));
         //seconds_radius = 7/8.0 * center_x;
 		var seconds_radius = height / 2 ; // wegen semiround halbe höhe
 		
@@ -433,7 +433,8 @@ module hands{
 		r1 = 35;
 		r2 = seconds_radius;
 		
-		if (SecHandsForm == 1) { //classic		
+		//if (SecHandsForm == 1) { //classic
+		if (SecHandsStyle == 1) { //classic		
 			//untere Raute		
 			hand =        	[
 							[center_x+r0*Math.sin(alpha),center_y-r0*Math.cos(alpha)],						
@@ -460,7 +461,8 @@ module hands{
 			dc.drawCircle(center_x+(seconds_radius-30)*Math.sin(alpha),center_y-(seconds_radius-30)*Math.cos(alpha),6);
 		}
 		
-		if (SecHandsForm == 2) { //simple
+		//if (SecHandsForm == 2) { //simple
+		if (SecHandsStyle >= 2) { //simple or wanted 1Hz, but can't do it
 			
 			dc.setPenWidth(3);
 			dc.setColor(color1, Gfx.COLOR_TRANSPARENT);

@@ -316,14 +316,17 @@
     	<settingConfig type="boolean" />
     </setting>
     
-    <setting propertyKey="@Properties.SecHandEnable" title="@Strings.SecHandEnableTitle">
+<!--     <setting propertyKey="@Properties.SecHandEnable" title="@Strings.SecHandEnableTitle">
         <settingConfig type="boolean" />
     </setting>
-    
+ -->
+     
         <setting propertyKey="@Properties.SecHandsForm" title="@Strings.SecHandsFormTitle">
         <settingConfig type="list">
-            <listEntry value="1">@Strings.SecHandsClassic</listEntry>        
-            <listEntry value="2">@Strings.SecHandsSimple</listEntry>
+            <listEntry value="0">@Strings.SF0</listEntry>        
+            <listEntry value="1">@Strings.SF1</listEntry>
+            <listEntry value="2">@Strings.SF2</listEntry>
+            <listEntry value="3">@Strings.SF3</listEntry>
         </settingConfig>
     </setting>
     
@@ -385,12 +388,14 @@
         </settingConfig>
     </setting>
     
-     <setting propertyKey="@Properties.UpperDispEnable" title="@Strings.UpperDispEnableTitle">
+<!--      <setting propertyKey="@Properties.UpperDispEnable" title="@Strings.UpperDispEnableTitle">
         <settingConfig type="boolean" />
     </setting> 
-   
+ -->
+    
     <setting propertyKey="@Properties.UDInfo" title="@Strings.UDInfoTitle">
         <settingConfig type="list">
+        	<listEntry value="0">@Strings.DNone</listEntry>
          	<listEntry value="1">@Strings.DDate</listEntry>
             <listEntry value="2">@Strings.DSteps</listEntry>
             <listEntry value="3">@Strings.DStepstogo</listEntry> 
@@ -406,12 +411,14 @@
         </settingConfig>
     </setting>
    
-     <setting propertyKey="@Properties.LowerDispEnable" title="@Strings.LowerDispEnableTitle">
+<!--      <setting propertyKey="@Properties.LowerDispEnable" title="@Strings.LowerDispEnableTitle">
         <settingConfig type="boolean" />
     </setting>
-    
+ -->
+     
     <setting propertyKey="@Properties.LDInfo" title="@Strings.LDInfoTitle">
         <settingConfig type="list">
+        	<listEntry value="0">@Strings.DNone</listEntry>
         	<listEntry value="1">@Strings.DDate</listEntry>
             <listEntry value="2">@Strings.DSteps</listEntry> 
             <listEntry value="3">@Strings.DStepstogo</listEntry>       

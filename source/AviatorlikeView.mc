@@ -171,7 +171,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		} 
 		
 	 // If this device supports BufferedBitmap, allocate the buffers we use for drawing
-        if(Toybox.Graphics has :BufferedBitmap) {
+        if((Toybox.Graphics has :BufferedBitmap)&& (WatchUi.WatchFace has :OnPartialUpdate)) {
             // Allocate a full screen size buffer with a palette of only a few colors to draw
             // the background image of the watchface.  This is used to facilitate blanking
             // the second hand during partial updates of the display
@@ -182,22 +182,22 @@ class AviatorlikeView extends Ui.WatchFace{
                  	//App.getApp().getProperty("BackgroundColor"),
                  	//App.getApp().getProperty("MinutesColor"),
                  	//App.getApp().getProperty("QuarterNumbersColor"),
-                    Graphics.COLOR_DK_GREEN,
-                    Graphics.COLOR_GREEN,
-                    Graphics.COLOR_DK_BLUE,
-                    Graphics.COLOR_BLUE,
-                    Graphics.COLOR_DK_RED,
-                    Graphics.COLOR_RED,
-                    Graphics.COLOR_ORANGE,
-                    0xFFFF00,
-                    Graphics.COLOR_YELLOW,
-                    Graphics.COLOR_PURPLE,
-                    Graphics.COLOR_PINK,                   
-              		Graphics.COLOR_LT_GRAY,
-              		Graphics.COLOR_DK_GRAY,
+                    //Graphics.COLOR_DK_GREEN,
+                    //Graphics.COLOR_GREEN,
+                    //Graphics.COLOR_DK_BLUE,
+                    //Graphics.COLOR_BLUE,
+                    //Graphics.COLOR_DK_RED,
+                    //Graphics.COLOR_RED,
+                    //Graphics.COLOR_ORANGE,
+                    //0xFFFF00,
+                    //Graphics.COLOR_YELLOW,
+                    //Graphics.COLOR_PURPLE,
+                    //Graphics.COLOR_PINK,                   
+              		//Graphics.COLOR_LT_GRAY,
+              		//Graphics.COLOR_DK_GRAY,
               		Graphics.COLOR_BLACK,
               		Graphics.COLOR_WHITE,
-              		App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
+              		//App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
                 ]
                 
             });
@@ -674,7 +674,7 @@ function drawBattery(dc) {
 	function drawStepGraph(dc,stepGraphposX, stepGraphposY, stepInfoX, stepInfoY) {
 		var activityHistory = ActMonitor.getHistory();
 	  	var histDays=activityHistory.size();
-	  	Sys.println("stepHistoryGraph histDays: " + histDays);
+	  	//Sys.println("stepHistoryGraph histDays: " + histDays);
 	  		  	
 	  	var maxheight = 26.0;	  	
 	  	var stepHistory=0;
@@ -689,7 +689,7 @@ function drawBattery(dc) {
 	  	dc.setPenWidth(1);
 	  	//first draw empty graph---------------------------------------------------------
 	  	for(var i=0;i<7;i++) {	 
-	  		Sys.println("empty graph i : " + i); 	
+	  		//Sys.println("empty graph i : " + i); 	
 	  		//dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
 	  		dc.drawRectangle(graphposX, graphposY, 9, maxheight);
 	        graphposX = graphposX - 11;	        
@@ -708,7 +708,7 @@ function drawBattery(dc) {
 		  			graphheight = maxheight;
 		  		}
 		  		
-		  		Sys.println("graphheight " + i + ": " + graphheight);	
+		  		//Sys.println("graphheight " + i + ": " + graphheight);	
 		  		dc.fillRectangle(graphposX, graphposY+maxheight-graphheight, 8, graphheight);		  	
 		  		dc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
 		  		dc.drawRectangle(graphposX, graphposY, 9, maxheight);
@@ -746,12 +746,14 @@ function drawBattery(dc) {
 		   	if (displayInfo == 1) {
 		   		date.buildDateString();
 		   		labelText = date.dateStr;	  		      
+		   		return;
 			}	
 	
 	 	    //Draw Steps --------------------------------------
 	      	if (displayInfo == 2) {				   		
 		   		labelText = Lang.format("$1$", [ActMonitor.getInfo().steps]);
 	  			labelInfoText = Lang.format("$1$", [ActMonitor.getInfo().stepGoal]);   						
+	  			return;
 			}
 			
 			//Draw Steps to go --------------------------------------
@@ -770,23 +772,27 @@ function drawBattery(dc) {
 			    }    			        
 			        stepstogo = Lang.format("$1$", [stepstogo]); 			        
 		   		labelText = stepstogo;				        			              
+		   		return;
 			}
 
 	 	    //Draw StepGraph --------------------------------------
 	      	if (displayInfo == 4) {				   		
 		   		labelText = "";
 	  			labelInfoText = Lang.format("$1$", [ActMonitor.getInfo().stepGoal]); 	  						
+	  			return;
 			}
 
 
 	 		//Draw DigitalTime---------------------------------
 		   	if (displayInfo == 5) {
 				 drawDigitalTime(); 
+				 return;
 			}	         
 	        
 	    	// Draw Altitude------------------------------
 			if (displayInfo == 6) {
 				drawAltitude();	
+				return;
 			 }	
 				
 			// Draw Calories------------------------------
@@ -795,6 +801,7 @@ function drawBattery(dc) {
 		        var actcals = actInfo.calories;		       
 		        labelText = Lang.format("$1$", [actcals]);
 		        labelInfoText = "kCal";
+		        return;
 			}
 			
 			//Draw distance
@@ -803,12 +810,14 @@ function drawBattery(dc) {
 				labelText = distance.distStr;
 	  			labelInfoText = distance.distUnit;
 	  			//Sys.println("Distance");
+	  			return;
 			}			
 			
 			//Draw battery
 			if (displayInfo == 9) {
 				var Battery = Toybox.System.getSystemStats().battery;       
         	    labelText = Lang.format("$1$ % ", [ Battery.format ( "%2d" ) ] );
+        	    return;
 			}
 			
 			//Draw Day and week of year
@@ -816,11 +825,13 @@ function drawBattery(dc) {
 				date.builddayWeekStr();
 				//labelText = date.dayWeekStr;
 				labelText = date.aktDay + " / " + date.week;
+				return;
 			}
 			
 			//next / over next sun event
 			if (displayInfo == 11) {
 				buildSunsetStr();
+				return;
 		    }
 		    
 		   	//heart rate
@@ -843,11 +854,12 @@ function drawBattery(dc) {
 				else {
 				labelText = "no sensor";
 				}				
+				return;
 		    }
 		   		    	    
 		    
 		   	//heart rate
-			if (displayInfo == 12) {
+			/*if (displayInfo == 12) {
 			var hasHR = (ActivityMonitor has :HeartRateIterator) ? true : false;			
 				if (hasHR) {
 					var HRH = ActMonitor.getHeartRateHistory(null, true);
@@ -866,7 +878,7 @@ function drawBattery(dc) {
 				else {
 				labelText = "no sensor";
 				}				
-		    }
+		    }*/
 		   		    	    
 	}		
 	
@@ -1319,8 +1331,8 @@ function drawBattery(dc) {
 	    }
 	    	
 	    	   
-	    var UpperDispEnable = (App.getApp().getProperty("UpperDispEnable"));
-	    var LowerDispEnable = (App.getApp().getProperty("LowerDispEnable"));
+	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
+	    var LowerDispEnable = (App.getApp().getProperty("LDInfo")!=0);
 
 	  	
 		//Anzeige oberes Display--------------------------  
@@ -1436,7 +1448,7 @@ var setX = center_x;
 	  	if ((App.getApp().getProperty("ConnectionIndicator") ==1) && !(Sys.getDeviceSettings().phoneConnected)) {
 				targetDc.setColor((App.getApp().getProperty("BackgroundColor")), Gfx.COLOR_TRANSPARENT);
 		} else {
-  			targetDc.setColor((App.getApp().getProperty("HandsColor1")), Gfx.COLOR_TRANSPARENT);
+  			targetDc.setColor((App.getApp().getProperty("HandsColor2")), Gfx.COLOR_TRANSPARENT);
 	   	} 
 
 	    
@@ -1457,14 +1469,17 @@ var setX = center_x;
         drawBackground(dc);
         
  	 //draw second hand 
-		if( partialUpdatesAllowed ) {
+ 	 	var SecHandStyle = App.getApp().getProperty("SecHandsForm");
+		if( partialUpdatesAllowed && (SecHandStyle==3) ) {
             // If this device supports partial updates and they are currently
             // allowed run the onPartialUpdate method to draw the second hand.
+            Sys.println("Entering onPartialUpdate");
             onPartialUpdate( dc );
         } else if (isAwake) {
-			var SecHandEnable = (App.getApp().getProperty("SecHandEnable"));
-	   			if (SecHandEnable) {
-	 			hands.drawSecondHands(dc);
+			//var SecHandEnable = (App.getApp().getProperty("SecHandEnable"));
+	   			if (SecHandStyle > 0) {
+	   			Sys.println("Entering drawSecHands with arg: "+SecHandStyle);
+	 			hands.drawSecondHands(dc, SecHandStyle);
 	 			}
  		}
  
@@ -1484,6 +1499,9 @@ Sys.println("");
         // If we're not doing a full screen refresh we need to re-draw the background
         // before drawing the updated second hand position. Note this will only re-draw
         // the background in the area specified by the previously computed clipping region.
+        if(App.getApp().getProperty("SecHandsForm") != 3) {  //draw 1Hz second hand if you so chose
+        	return;
+        }
         if(!fullScreenRefresh) {
             drawBackground(dc);
         }
