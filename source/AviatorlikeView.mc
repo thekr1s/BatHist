@@ -80,7 +80,7 @@ class AviatorlikeView extends Ui.WatchFace{
      
         
         fullScreenRefresh = true;
-        partialUpdatesAllowed = ( Toybox.WatchUi.WatchFace has :onPartialUpdate );
+        partialUpdatesAllowed = ((Toybox.Graphics has :BufferedBitmap) && (Toybox.WatchUi.WatchFace has :onPartialUpdate));
                
     }//end of initialize()
    
@@ -171,7 +171,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		} 
 		
 	 // If this device supports BufferedBitmap, allocate the buffers we use for drawing
-        if((Toybox.Graphics has :BufferedBitmap)&& (WatchUi.WatchFace has :OnPartialUpdate)) {
+        if((Toybox.Graphics has :BufferedBitmap) && (Ui.WatchFace has :onPartialUpdate)) {
             // Allocate a full screen size buffer with a palette of only a few colors to draw
             // the background image of the watchface.  This is used to facilitate blanking
             // the second hand during partial updates of the display
@@ -182,22 +182,22 @@ class AviatorlikeView extends Ui.WatchFace{
                  	//App.getApp().getProperty("BackgroundColor"),
                  	//App.getApp().getProperty("MinutesColor"),
                  	//App.getApp().getProperty("QuarterNumbersColor"),
-                    //Graphics.COLOR_DK_GREEN,
-                    //Graphics.COLOR_GREEN,
-                    //Graphics.COLOR_DK_BLUE,
-                    //Graphics.COLOR_BLUE,
-                    //Graphics.COLOR_DK_RED,
-                    //Graphics.COLOR_RED,
-                    //Graphics.COLOR_ORANGE,
-                    //0xFFFF00,
+                    Graphics.COLOR_DK_GREEN,
+                    Graphics.COLOR_GREEN,
+                    Graphics.COLOR_DK_BLUE,
+                    Graphics.COLOR_BLUE,
+                    Graphics.COLOR_DK_RED,
+                    Graphics.COLOR_RED,
+                    Graphics.COLOR_ORANGE,
+                    0xFFFF00,
                     //Graphics.COLOR_YELLOW,
-                    //Graphics.COLOR_PURPLE,
-                    //Graphics.COLOR_PINK,                   
-              		//Graphics.COLOR_LT_GRAY,
-              		//Graphics.COLOR_DK_GRAY,
+                    Graphics.COLOR_PURPLE,
+                    Graphics.COLOR_PINK,                   
+              		Graphics.COLOR_LT_GRAY,
+              		Graphics.COLOR_DK_GRAY,
               		Graphics.COLOR_BLACK,
               		Graphics.COLOR_WHITE,
-              		//App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
+              		App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
                 ]
                 
             });
