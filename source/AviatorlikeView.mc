@@ -1473,12 +1473,12 @@ var setX = center_x;
 		if( partialUpdatesAllowed && (SecHandStyle==3) ) {
             // If this device supports partial updates and they are currently
             // allowed run the onPartialUpdate method to draw the second hand.
-            Sys.println("Entering onPartialUpdate");
+            //Sys.println("Entering onPartialUpdate");
             onPartialUpdate( dc );
         } else if (isAwake) {
 			//var SecHandEnable = (App.getApp().getProperty("SecHandEnable"));
 	   			if (SecHandStyle > 0) {
-	   			Sys.println("Entering drawSecHands with arg: "+SecHandStyle);
+	   			//Sys.println("Entering drawSecHands with arg: "+SecHandStyle);
 	 			hands.drawSecondHands(dc, SecHandStyle);
 	 			}
  		}
