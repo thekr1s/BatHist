@@ -10,6 +10,8 @@ using Toybox.Activity as Act;
 using Toybox.ActivityMonitor as ActMonitor;
 using Toybox.Sensor as Snsr;
 
+var partialUpdatesAllowed = false;
+
 enum
 {
     LAT,
@@ -34,6 +36,12 @@ class AviatorlikeView extends Ui.WatchFace{
 		var infoRight;
 	    
 	    var isAwake;
+	    
+	    var offscreenBuffer;
+	    var curClip;
+	    var screenCenterPoint;
+	    var fullScreenRefresh;
+	    
 	    var screenShape;
 	    var fontLabel;
 	    var fontIcons;
@@ -61,17 +69,23 @@ class AviatorlikeView extends Ui.WatchFace{
 		var ConnectedPhoneIcon="C";
 		var DisconnectedPhoneIcon="D";
 		
+<<<<<<< HEAD
+=======
+		
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 		
     function initialize() {
         WatchFace.initialize();        
 	    fontLabel = Ui.loadResource(Rez.Fonts.id_font_label);
 	    fontIcons = Ui.loadResource(Rez.Fonts.id_font_icons);
         screenShape = Sys.getDeviceSettings().screenShape;                  
-        Sys.println("Screenshape = " + screenShape);
+        Sys.println("Screenshape = " + screenShape);  
      
         
-        
-    }
+        fullScreenRefresh = true;
+        partialUpdatesAllowed = ((Toybox.Graphics has :BufferedBitmap) && (Toybox.WatchUi.WatchFace has :onPartialUpdate));
+               
+    }//end of initialize()
    
     
     function onLayout(dc) { 
@@ -157,7 +171,78 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	moonx = 165;
 		   	moony = 71;
 		   	moonwidth = 36; 		
-		}                            
+		} 
+		
+	 // If this device supports BufferedBitmap, allocate the buffers we use for drawing
+        if((Toybox.Graphics has :BufferedBitmap) && (Ui.WatchFace has :onPartialUpdate)) {
+            // Allocate a full screen size buffer with a palette of only a few colors to draw
+            // the background image of the watchface.  This is used to facilitate blanking
+            // the second hand during partial updates of the display
+            offscreenBuffer = new Gfx.BufferedBitmap({
+                :width=>dc.getWidth(),
+                :height=>dc.getHeight(),
+                :palette=> [
+                 	//App.getApp().getProperty("BackgroundColor"),
+                 	//App.getApp().getProperty("MinutesColor"),
+                 	//App.getApp().getProperty("QuarterNumbersColor"),
+                    Graphics.COLOR_DK_GREEN,
+                    Graphics.COLOR_GREEN,
+                    Graphics.COLOR_DK_BLUE,
+                    Graphics.COLOR_BLUE,
+                    Graphics.COLOR_DK_RED,
+                    Graphics.COLOR_RED,
+                    Graphics.COLOR_ORANGE,
+                    0xFFFF00,
+                    //Graphics.COLOR_YELLOW,
+                    Graphics.COLOR_PURPLE,
+                    Graphics.COLOR_PINK,                   
+              		Graphics.COLOR_LT_GRAY,
+              		Graphics.COLOR_DK_GRAY,
+              		Graphics.COLOR_BLACK,
+              		Graphics.COLOR_WHITE,
+              		App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
+                ]
+                
+            });
+
+            // Allocate a buffer tall enough to draw the date into the full width of the
+            // screen. This buffer is also used for blanking the second hand. This full
+            // color buffer is needed because anti-aliased fonts cannot be drawn into
+            // a buffer with a reduced color palette
+          //  dateBuffer = new Graphics.BufferedBitmap({
+          //      :width=>dc.getWidth(),
+          //      :height=>Graphics.getFontHeight(Graphics.FONT_MEDIUM)
+          //  });
+        } else {
+            offscreenBuffer = null;
+        }
+
+        curClip = null;
+
+     //   screenCenterPoint = [dc.getWidth()/2, dc.getHeight()/2];
+        
+    } // onLayout(dc)
+
+    // This function is used to generate the coordinates of the 4 corners of the polygon
+    // used to draw a watch hand. The coordinates are generated with specified length,
+    // tail length, and width and rotated around the center point at the provided angle.
+    // 0 degrees is at the 12 o'clock position, and increases in the clockwise direction.
+    function generateHandCoordinates(centerPoint, angle, handLength, tailLength, width) {
+        // Map out the coordinates of the watch hand
+        var coords = [[-(width / 2), tailLength], [-(width / 2), -handLength], [width / 2, -handLength], [width / 2, tailLength]];
+        var result = new [4];
+        var cos = Math.cos(angle);
+        var sin = Math.sin(angle);
+
+        // Transform the coordinates
+        for (var i = 0; i < 4; i += 1) {
+            var x = (coords[i][0] * cos) - (coords[i][1] * sin) + 0.5;
+            var y = (coords[i][0] * sin) + (coords[i][1] * cos) + 0.5;
+
+            result[i] = [centerPoint[0] + x, centerPoint[1] + y];
+        }
+
+        return result;
     }
 
    
@@ -240,8 +325,8 @@ class AviatorlikeView extends Ui.WatchFace{
         		}
         		      	
            	for (var alpha = (Math.PI / 2) + nurdrei ; alpha <= alphaMax * Math.PI / 2; alpha += (Math.PI / 2)) { //jede 15. Minute    
-			r1 = (width/2 + 3) - outerRad; //outside
-			r2 = r1 -lenth; //inside			
+				r1 = (width/2 + 3) - outerRad; //outside
+				r2 = r1 -lenth; //inside			
 							
 			var marks = [[center_x+r1*Math.sin(alpha-thicknes),center_y-r1*Math.cos(alpha-thicknes)],
 						[center_x+r2*Math.sin(alpha-thicknes),center_y-r2*Math.cos(alpha-thicknes)],
@@ -592,7 +677,7 @@ function drawBattery(dc) {
 	function drawStepGraph(dc,stepGraphposX, stepGraphposY, stepInfoX, stepInfoY) {
 		var activityHistory = ActMonitor.getHistory();
 	  	var histDays=activityHistory.size();
-	  	//Sys.println("histDays: " + histDays);
+	  	//Sys.println("stepHistoryGraph histDays: " + histDays);
 	  		  	
 	  	var maxheight = 26.0;	  	
 	  	var stepHistory=0;
@@ -607,7 +692,7 @@ function drawBattery(dc) {
 	  	dc.setPenWidth(1);
 	  	//first draw empty graph---------------------------------------------------------
 	  	for(var i=0;i<7;i++) {	 
-	  		//Sys.println("i : " + i); 	
+	  		//Sys.println("empty graph i : " + i); 	
 	  		//dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
 	  		dc.drawRectangle(graphposX, graphposY, 9, maxheight);
 	        graphposX = graphposX - 11;	        
@@ -615,6 +700,7 @@ function drawBattery(dc) {
 	  		  	
 	  if (histDays > 0) {	  	
 	  		graphposX = stepGraphposX;
+	  		
 		  	for(var i=0;i<histDays;i++) {
 		  		maxValue=stepHistory+activityHistory[i].stepGoal;
 		  		graphheight = maxheight / maxValue;		  		
@@ -663,12 +749,14 @@ function drawBattery(dc) {
 		   	if (displayInfo == 1) {
 		   		date.buildDateString();
 		   		labelText = date.dateStr;	  		      
+		   		return;
 			}	
 	
 	 	    //Draw Steps --------------------------------------
 	      	if (displayInfo == 2) {				   		
 		   		labelText = Lang.format("$1$", [ActMonitor.getInfo().steps]);
 	  			labelInfoText = Lang.format("$1$", [ActMonitor.getInfo().stepGoal]);   						
+	  			return;
 			}
 			
 			//Draw Steps to go --------------------------------------
@@ -687,23 +775,27 @@ function drawBattery(dc) {
 			    }    			        
 			        stepstogo = Lang.format("$1$", [stepstogo]); 			        
 		   		labelText = stepstogo;				        			              
+		   		return;
 			}
 
 	 	    //Draw StepGraph --------------------------------------
 	      	if (displayInfo == 4) {				   		
 		   		labelText = "";
 	  			labelInfoText = Lang.format("$1$", [ActMonitor.getInfo().stepGoal]); 	  						
+	  			return;
 			}
 
 
 	 		//Draw DigitalTime---------------------------------
 		   	if (displayInfo == 5) {
 				 drawDigitalTime(); 
+				 return;
 			}	         
 	        
 	    	// Draw Altitude------------------------------
 			if (displayInfo == 6) {
 				drawAltitude();	
+				return;
 			 }	
 				
 			// Draw Calories------------------------------
@@ -712,6 +804,7 @@ function drawBattery(dc) {
 		        var actcals = actInfo.calories;		       
 		        labelText = Lang.format("$1$", [actcals]);
 		        labelInfoText = "kCal";
+		        return;
 			}
 			
 			//Draw distance
@@ -720,12 +813,14 @@ function drawBattery(dc) {
 				labelText = distance.distStr;
 	  			labelInfoText = distance.distUnit;
 	  			//Sys.println("Distance");
+	  			return;
 			}			
 			
 			//Draw battery
 			if (displayInfo == 9) {
 				var Battery = Toybox.System.getSystemStats().battery;       
         	    labelText = Lang.format("$1$ % ", [ Battery.format ( "%2d" ) ] );
+        	    return;
 			}
 			
 			//Draw Day and week of year
@@ -733,11 +828,13 @@ function drawBattery(dc) {
 				date.builddayWeekStr();
 				//labelText = date.dayWeekStr;
 				labelText = date.aktDay + " / " + date.week;
+				return;
 			}
 			
 			//next / over next sun event
 			if (displayInfo == 11) {
 				buildSunsetStr();
+				return;
 		    }
 		    
 		   	//heart rate
@@ -760,20 +857,55 @@ function drawBattery(dc) {
 				else {
 				labelText = "no sensor";
 				}				
+				return;
 		    }
 		   		    	    
 		    
-		    
-	//Sys.println("Dispfilled");
-	//Sys.println("");
+		   	//heart rate
+			/*if (displayInfo == 12) {
+			var hasHR = (ActivityMonitor has :HeartRateIterator) ? true : false;			
+				if (hasHR) {
+					var HRH = ActMonitor.getHeartRateHistory(null, true);
+					var hr="--";
+					
+					if(HRH != null) {
+						var HRS=HRH.next();
+						if(HRS!=null && HRS.heartRate!=null && HRS.heartRate!=ActMonitor.INVALID_HR_SAMPLE) {
+							hr = HRS.heartRate.toString();
+							labelText = hr;
+							labelInfoText = "bpm";
+							//labelText = HRH.getMax()+"/"+HRH.getMin()+" "+HRS.heartRate+" bpm";			
+						}
+					}	
+				}
+				else {
+				labelText = "no sensor";
+				}				
+		    }*/
+		   		    	    
 	}		
 	
-
+	
+//-----------------------------------------------------------------------------------------------
 // Handle the update event-----------------------------------------------------------------------
     function onUpdate(dc) {
     
    	//Sys.println("width = " + width);
 	//Sys.println("height = " + height);
+	
+	    // We always want to refresh the full screen when we get a regular onUpdate call.
+        fullScreenRefresh = true;
+
+		var targetDc = null;
+        if(null != offscreenBuffer) {
+            dc.clearClip();
+            curClip = null;
+            // If we have an offscreen buffer that we are using to draw the background,
+            // set the draw context of that buffer as our target.
+            targetDc = offscreenBuffer.getDc();
+        } else {
+            targetDc = dc;
+        }
 
           
         
@@ -788,32 +920,85 @@ function drawBattery(dc) {
         	BGColor= App.getApp().getProperty("BackgroundColor");
         	}
         	//Sys.println("BGColor= "+BGColor);
+<<<<<<< HEAD
         dc.setColor(Gfx.COLOR_TRANSPARENT, BGColor);
         dc.clear();
+=======
+        targetDc.setColor(Gfx.COLOR_TRANSPARENT, BGColor);
+        targetDc.clear();
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
       
    // Draw the hash marks ---------------------------------------------------------------------------
-        drawHashMarks(dc);  
-        drawQuarterHashmarks(dc);  
+        drawHashMarks(targetDc);  
+        drawQuarterHashmarks(targetDc);  
+   
+     
         
         
     // Indicators, moon ---------------------------------------------------------------------------       
         //! Moon phase
+/*		var MoonEnable = (App.getApp().getProperty("MoonEnable"));
+		if (MoonEnable) {             			
+	   		var now = Time.now();
+			var dateinfo = Calendar.info(now, Time.FORMAT_SHORT);
+	        var clockTime = Sys.getClockTime();
+	        var moon = new Moon(Ui.loadResource(Rez.Drawables.moon), moonwidth, moonx, moony);
+			moon.updateable_calcmoonphase(targetDc, dateinfo, clockTime.hour);
+			targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
+			targetDc.setPenWidth(1);	   
+	//Sys.println("moonx="+moonx+"  moony="+moony+"  moonwidth="+moonwidth);		
+	 		targetDc.drawCircle(moonx+moonwidth/2,moony+moonwidth/2,moonwidth/2-1);
+	 		
+	 		//dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
+	 		//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2-12, fontLabel, moon.c_moon_label, Gfx.TEXT_JUSTIFY_CENTER);
+			//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2, fontLabel, moon.c_phase, Gfx.TEXT_JUSTIFY_CENTER);
+		} 
+*/	
+		//!progress battery------------
+		var BatProgressEnable = (App.getApp().getProperty("BatProgressEnable"));
+       	if (BatProgressEnable) {
+			drawBattery(targetDc);
+		}
+		//!progress steps--------------
+		var StepProgressEnable = (App.getApp().getProperty("StepProgressEnable"));
+       	if (StepProgressEnable) {
+			drawStepGoal(targetDc);
+		}
+		//! Markers for sunrise and sunset
+		var SunmarkersEnable = (App.getApp().getProperty("SunMarkersEnable"));		
+       	if (SunmarkersEnable && screenShape == 1) {
+       		//Sys.println("sunmarkers "+ SunmarkersEnable);
+			extras.drawSunMarkers(targetDc);
+		}
+		
+//		drawBackground(dc); 
+		
+		
+		 //! Moon phase
 		var MoonEnable = (App.getApp().getProperty("MoonEnable"));
 		if (MoonEnable) {             			
 	   		var now = Time.now();
 			var dateinfo = Calendar.info(now, Time.FORMAT_SHORT);
 	        var clockTime = Sys.getClockTime();
 	        var moon = new Moon(Ui.loadResource(Rez.Drawables.moon), moonwidth, moonx, moony);
+<<<<<<< HEAD
 			moon.updateable_calcmoonphase(dc, dateinfo, clockTime.hour);
 			dc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
 			dc.setPenWidth(1);	   
 	//Sys.println("moonx="+moonx+"  moony="+moony+"  moonwidth="+moonwidth);		
 	 		dc.drawCircle(moonx+moonwidth/2,moony+moonwidth/2,moonwidth/2-1);
+=======
+			moon.updateable_calcmoonphase(targetDc, dateinfo, clockTime.hour);
+			targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
+			targetDc.setPenWidth(1);	   
+	 		targetDc.drawCircle(moonx+moonwidth/2,moony+moonwidth/2,moonwidth/2-1);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	 		
 	 		//dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
 	 		//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2-12, fontLabel, moon.c_moon_label, Gfx.TEXT_JUSTIFY_CENTER);
 			//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2, fontLabel, moon.c_phase, Gfx.TEXT_JUSTIFY_CENTER);
 		} 	
+<<<<<<< HEAD
 		//!progress battery------------
 		var BatProgressEnable = (App.getApp().getProperty("BatProgressEnable"));
        	if (BatProgressEnable) {
@@ -830,11 +1015,14 @@ function drawBattery(dc) {
        		//Sys.println("sunmarkers "+ SunmarkersEnable);
 			extras.drawSunMarkers(dc);
 		}
+=======
+		
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 
 
       // Draw the numbers --------------------------------------------------------------------------------------
        var NbrFont = (App.getApp().getProperty("Numbers")); 
-       dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
+       targetDc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
        var font1 = 0;  
        var rightNum="3";
        var leftNum="9";
@@ -872,75 +1060,111 @@ function drawBattery(dc) {
    		    if ( NbrFont == 1) { //fat 12 only
 	    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
 	    		if (twelveNum == 0) {
+<<<<<<< HEAD
 					dc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 				} else {
 					dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+					targetDc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+				} else {
+					targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 				}
 			
 	    	}            
 		    if ( NbrFont == 2) { //fat
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 					} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+						targetDc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+					} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 					}
 		    		if (! MoonEnable) {
-		    			dc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+		    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
 	        		}
-	        		dc.drawText(width / 2, height - 54, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 54, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
 		    if ( NbrFont == 3) { //race
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_race);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 					} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+						targetDc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+					} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 					}
 		    		if (! MoonEnable) {	
-		    			dc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+		    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
 	        		}
-	        		dc.drawText(width / 2, height - 52, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 52, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
 		    if ( NbrFont == 4) { //classic
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_classic);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), 15, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 					} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+						targetDc.drawText((width / 2), 15, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+					} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 					}
 		    		if (! MoonEnable) {	
-		    			dc.drawText(width - 16, (height / 2) - 18, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+		    			targetDc.drawText(width - 16, (height / 2) - 18, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
 	        		}
-	        		dc.drawText(width / 2, height - 48, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 18, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 48, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 18, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
 		   if ( NbrFont == 5) {  //roman
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_roman);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), 7, font1, "}", Gfx.TEXT_JUSTIFY_CENTER);
 					} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+						targetDc.drawText((width / 2), 7, font1, "}", Gfx.TEXT_JUSTIFY_CENTER);
+					} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 					}
 		    		if (! MoonEnable) {	
-		    			dc.drawText(width - 16, (height / 2) - 22, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+		    			targetDc.drawText(width - 16, (height / 2) - 22, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
 	        		}
-	        		dc.drawText(width / 2, height - 50, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 22, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 50, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 22, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
 		   	if ( NbrFont == 6) {  //simple
 		   			if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), 10, Gfx.FONT_SYSTEM_LARGE, "12", Gfx.TEXT_JUSTIFY_CENTER);
 					} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+						targetDc.drawText((width / 2), 10, Gfx.FONT_SYSTEM_LARGE, "12", Gfx.TEXT_JUSTIFY_CENTER);
+					} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 					}
 		    		if (! MoonEnable) {
-		    			dc.drawText(width - 16, (height / 2) - 22, Gfx.FONT_SYSTEM_LARGE  , rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+		    			targetDc.drawText(width - 16, (height / 2) - 22, Gfx.FONT_SYSTEM_LARGE  , rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
 	        		}
-	        		dc.drawText(width / 2, height - 45, Gfx.FONT_SYSTEM_LARGE   , "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 22, Gfx.FONT_SYSTEM_LARGE   , leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 45, Gfx.FONT_SYSTEM_LARGE   , "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 22, Gfx.FONT_SYSTEM_LARGE   , leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
 	   	}
        
@@ -950,82 +1174,133 @@ function drawBattery(dc) {
    		    if ( NbrFont == 1) { //fat
 	    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
 	    		if (twelveNum == 0) {
+<<<<<<< HEAD
 					dc.drawText((width / 2), -12, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 				} else {
 					dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+					targetDc.drawText((width / 2), -12, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+				} else {
+					targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 				}
 		    }
                   
 		    if ( NbrFont == 2) { //fat
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), -12, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 		    		} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
 					if (! MoonEnable) {	
 		    			dc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+=======
+						targetDc.drawText((width / 2), -12, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+		    		} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+					}
+					if (! MoonEnable) {	
+		    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	        		}
-	        		dc.drawText(width / 2, height - 41, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 41, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    }
 		    if ( NbrFont == 3) { //race
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_race);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), -12, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 		    		} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
 					if (! MoonEnable) {		
 		    			dc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+=======
+						targetDc.drawText((width / 2), -12, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+		    		} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+					}
+					if (! MoonEnable) {		
+		    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	        		}
-	        		dc.drawText(width / 2, height - 39, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 39, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
 		    if ( NbrFont == 4) { //classic
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_classic);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), 0, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 		    		} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
 					if (! MoonEnable) {		
 		    			dc.drawText(width - 16, (height / 2) - 18, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+=======
+						targetDc.drawText((width / 2), 0, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+		    		} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+					}
+					if (! MoonEnable) {		
+		    			targetDc.drawText(width - 16, (height / 2) - 18, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	        		}
-	        		dc.drawText(width / 2, height - 33, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 18, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 33, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 18, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
 		   if ( NbrFont == 5) {  //roman
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_roman);
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), -4, font1, "}", Gfx.TEXT_JUSTIFY_CENTER);
 		    		} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
 					if (! MoonEnable) {		
 		    			dc.drawText(width - 16, (height / 2) - 22, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+=======
+						targetDc.drawText((width / 2), -4, font1, "}", Gfx.TEXT_JUSTIFY_CENTER);
+		    		} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+					}
+					if (! MoonEnable) {		
+		    			targetDc.drawText(width - 16, (height / 2) - 22, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	        		}
-	        		dc.drawText(width / 2, height - 40, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 22, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 40, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 22, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
 		   	if ( NbrFont == 6) {  //simple
 		    		if (twelveNum == 0) {
+<<<<<<< HEAD
 						dc.drawText((width / 2), -3, Gfx.FONT_SYSTEM_LARGE   , "12", Gfx.TEXT_JUSTIFY_CENTER);
 		    		} else {
 						dc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
 					if (! MoonEnable) {		
 		    			dc.drawText(width - 16, (height / 2) - 17, Gfx.FONT_SYSTEM_LARGE  , rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+=======
+						targetDc.drawText((width / 2), -3, Gfx.FONT_SYSTEM_LARGE   , "12", Gfx.TEXT_JUSTIFY_CENTER);
+		    		} else {
+						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+					}
+					if (! MoonEnable) {		
+		    			targetDc.drawText(width - 16, (height / 2) - 17, Gfx.FONT_SYSTEM_LARGE  , rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	        		}
-	        		dc.drawText(width / 2, height - 30, Gfx.FONT_SYSTEM_LARGE   , "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		dc.drawText(16, (height / 2) - 17, Gfx.FONT_SYSTEM_LARGE   , leftNum, Gfx.TEXT_JUSTIFY_LEFT);
+	        		targetDc.drawText(width / 2, height - 30, Gfx.FONT_SYSTEM_LARGE   , "6", Gfx.TEXT_JUSTIFY_CENTER);
+	        		targetDc.drawText(16, (height / 2) - 17, Gfx.FONT_SYSTEM_LARGE   , leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
 	   	} 
        
 
   // Draw hands under a lot sorta out of order ------------------------------------         
     	if (App.getApp().getProperty("HandsBehind")) {
-    	   hands.drawHands(dc); 
+    	   hands.drawHands(targetDc); 
     	 }
 		
 		
@@ -1043,7 +1318,7 @@ function drawBattery(dc) {
 			infoLeft = "";
 			infoRight = "";
 			
-			dc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
+			targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
 			var messages = Sys.getDeviceSettings().notificationCount;
 			var alarm = Sys.getDeviceSettings().alarmCount; 
 			
@@ -1061,20 +1336,37 @@ function drawBattery(dc) {
 				//messages
 				if (!App.getApp().getProperty("UseIcons")){
 					if (messages > 0) {
+<<<<<<< HEAD
  	     		    	dc.fillCircle(width / 2 + offcenter, height / 2 -7, 5);
  	     			}
  	     			dc.setPenWidth(2);
+=======
+ 	     		    	targetDc.fillCircle(width / 2 + offcenter, height / 2 -7, 5);
+ 	     			}
+ 	     			targetDc.setPenWidth(2);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 
+<<<<<<< HEAD
  	        		dc.drawCircle(width / 2 + offcenter, height / 2 -7, 5);
+=======
+ 	        		targetDc.drawCircle(width / 2 + offcenter, height / 2 -7, 5);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
  	        	}	
  	        		     		     	
 				//Alarm		     	
  	     		if (!App.getApp().getProperty("UseIcons")){
  	     			if (alarm > 0) {
+<<<<<<< HEAD
  	     				dc.fillCircle(width / 2 - offcenter, height / 2 -7, 5);
  	     			}
  	     			dc.setPenWidth(2);
  	        		dc.drawCircle(width / 2 - offcenter, height / 2 -7, 5);
+=======
+ 	     				targetDc.fillCircle(width / 2 - offcenter, height / 2 -7, 5);
+ 	     			}
+ 	     			targetDc.setPenWidth(2);
+ 	        		targetDc.drawCircle(width / 2 - offcenter, height / 2 -7, 5);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
  	        	}
 	     	} 
 	     	
@@ -1111,6 +1403,7 @@ function drawBattery(dc) {
 	     	if (App.getApp().getProperty("UseIcons")&&(AlmMsg<=2))
 	     	{
 	     		//Sys.println("Using icons");
+<<<<<<< HEAD
 	     		var xtiny_correction = Gfx.getFontHeight(Gfx.FONT_TINY)/2 + 2;
 	     		//Sys.println("font ascent = "+xtiny_correction);
 
@@ -1143,6 +1436,40 @@ function drawBattery(dc) {
 	 		
 	 		dc.drawText(width / 2 - offcenter, height / 2 -15, fontLabel, infoLeft, Gfx.TEXT_JUSTIFY_CENTER);
 	 		dc.drawText(width / 2 - offcenter, height / 2 -2, fontLabel, labelLeft, Gfx.TEXT_JUSTIFY_CENTER);
+=======
+	     		var xtiny_correction = 10; //Gfx.getFontHeight(Gfx.FONT_TINY)/2 + 2;
+	     		//Sys.println("font ascent = "+xtiny_correction);
+
+	     		if (AlmMsg==1)
+	     		{
+	     			if (messages > 0) {
+	     				targetDc.drawText(width / 2 + offcenter +4, height / 2 -10, fontIcons, MessageIcon, Gfx.TEXT_JUSTIFY_LEFT);    //message icon
+	     				targetDc.drawText(width / 2 + offcenter, height / 2 -xtiny_correction, fontLabel, messages, Gfx.TEXT_JUSTIFY_RIGHT);  //# of messages
+	     			}
+	 				if (alarm>0) {
+	 					targetDc.drawText(width / 2 - offcenter -4, height / 2 -10, fontIcons, AlarmIcon, Gfx.TEXT_JUSTIFY_RIGHT);  //alarm icon
+	 					targetDc.drawText(width / 2 - offcenter, height / 2 -xtiny_correction, fontLabel, alarm, Gfx.TEXT_JUSTIFY_LEFT);	  //# of alarms
+	 				}
+	     			   		
+	 			}
+	 			if (AlmMsg==2)
+	 				{
+	 				if (messages > 0) {
+ 	     		    	targetDc.drawText(width / 2 + offcenter, height / 2 -8, fontIcons,MessageIcon,Gfx.TEXT_JUSTIFY_CENTER);
+ 	     			}
+ 	     			if (alarm>0) {
+ 	     				targetDc.drawText(width / 2 - offcenter, height / 2 -8, fontIcons,AlarmIcon,Gfx.TEXT_JUSTIFY_CENTER);
+ 	     			}
+	 			}
+	     	}
+	     	else
+	     	{	
+			targetDc.drawText(width / 2 + offcenter, height / 2 -15, fontLabel, infoRight, Gfx.TEXT_JUSTIFY_CENTER);	     		
+	 		targetDc.drawText(width / 2 + offcenter, height / 2 -2, fontLabel, labelRight, Gfx.TEXT_JUSTIFY_CENTER);
+	 		
+	 		targetDc.drawText(width / 2 - offcenter, height / 2 -15, fontLabel, infoLeft, Gfx.TEXT_JUSTIFY_CENTER);
+	 		targetDc.drawText(width / 2 - offcenter, height / 2 -2, fontLabel, labelLeft, Gfx.TEXT_JUSTIFY_CENTER);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	 		} 
 		}       
 
@@ -1178,8 +1505,8 @@ function drawBattery(dc) {
 	    }
 	    	
 	    	   
-	    var UpperDispEnable = (App.getApp().getProperty("UpperDispEnable"));
-	    var LowerDispEnable = (App.getApp().getProperty("LowerDispEnable"));
+	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
+	    var LowerDispEnable = (App.getApp().getProperty("LDInfo")!=0);
 
 	  	
 		//Anzeige oberes Display--------------------------  
@@ -1189,17 +1516,17 @@ function drawBattery(dc) {
 			setLabel(displayInfo);
 			//background for upper display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {
-			  dc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
-	       	  dc.fillRoundedRectangle(ULBGx, ULBGy , ULBGwidth, 38, 5);
+			  targetDc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
+	       	  targetDc.fillRoundedRectangle(ULBGx, ULBGy , ULBGwidth, 38, 5);
 	       	  }
       	      	 
-        	dc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
-        	dc.drawText(ULTEXTx, ULTEXTy, fontDigital, labelText, Gfx.TEXT_JUSTIFY_CENTER);	
-        	//dc.drawText(ULTEXTx, ULTEXTy, fontDigital, "88:88/88:88", Gfx.TEXT_JUSTIFY_CENTER);	
-			dc.drawText(ULINFOx, ULINFOy, fontLabel, labelInfoText, Gfx.TEXT_JUSTIFY_RIGHT);
+        	targetDc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
+        	targetDc.drawText(ULTEXTx, ULTEXTy, fontDigital, labelText, Gfx.TEXT_JUSTIFY_CENTER);	
+        	//targetDc.drawText(ULTEXTx, ULTEXTy, fontDigital, "88:88/88:88", Gfx.TEXT_JUSTIFY_CENTER);	
+			targetDc.drawText(ULINFOx, ULINFOy, fontLabel, labelInfoText, Gfx.TEXT_JUSTIFY_RIGHT);
 			
 			if (displayInfo == 4) {
-			drawStepGraph(dc, ULTEXTx, ULTEXTy, ULINFOx, ULINFOy);
+			drawStepGraph(targetDc, ULTEXTx, ULTEXTy, ULINFOx, ULINFOy);
 			}	    				
 		}	
 		
@@ -1211,25 +1538,25 @@ function drawBattery(dc) {
 			setLabel(displayInfo);
 			//background for lower display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {
-			  dc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
-	       	  dc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
+			  targetDc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
+	       	  targetDc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
 	       	  }
 	       	
 	      // 	dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
 	      // 	dc.drawRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
 	       	      	      	 
-        	dc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
-        	dc.drawText(LLTEXTx, LLTEXTy, fontDigital, labelText, Gfx.TEXT_JUSTIFY_CENTER);
+        	targetDc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
+        	targetDc.drawText(LLTEXTx, LLTEXTy, fontDigital, labelText, Gfx.TEXT_JUSTIFY_CENTER);
        // 	dc.drawText(LLTEXTx-25, LLTEXTy, fontDigital, "88888", Gfx.TEXT_JUSTIFY_CENTER);		
-			dc.drawText(LLINFOx, LLINFOy, fontLabel, labelInfoText, Gfx.TEXT_JUSTIFY_RIGHT);
+			targetDc.drawText(LLINFOx, LLINFOy, fontLabel, labelInfoText, Gfx.TEXT_JUSTIFY_RIGHT);
 			
 			if (displayInfo == 4) {
-			drawStepGraph(dc, LLTEXTx, LLTEXTy, LLINFOx, LLINFOy);
+			drawStepGraph(targetDc, LLTEXTx, LLTEXTy, LLINFOx, LLINFOy);
 			}	    				
 		}
 
 //Fadenkreuz-------------------------------------
-	  	dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+	  	//dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
 //	  	dc.setPenWidth(1);  	
 //		dc.drawLine(ULBGx, 0, ULBGx , height);
 //		dc.drawLine(ULBGx + ULBGwidth, 0, ULBGx + ULBGwidth , height);	
@@ -1245,32 +1572,32 @@ var setY = ULBGy + 40 ;
 var setX = center_x;
 
 	if (showMoveBar) {
-	dc.setPenWidth(3);
+	targetDc.setPenWidth(3);
 	
-		dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
+		targetDc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
 		if (ActMonitor.getInfo().moveBarLevel >= 1) {
-			dc.drawLine(setX - 7 , setY, setX  - 58, setY);		
+			targetDc.drawLine(setX - 7 , setY, setX  - 58, setY);		
 		//	dc.fillRoundedRectangle(ULBGx , setY, ULBGwidth/2 - 2 , 3, 3);
 		}
 		
 		
 		if (ActMonitor.getInfo().moveBarLevel >= 2) {
-			dc.drawLine(setX , setY, setX + 10, setY);
+			targetDc.drawLine(setX , setY, setX + 10, setY);
 			setX = setX +  16;
 		//	dc.fillRoundedRectangle(ULBGx + ULBGwidth/2, setY, ULBGwidth/8 - 2 , 3, 3);
 		}
 		if (ActMonitor.getInfo().moveBarLevel >= 3) {
-			dc.drawLine(setX , setY, setX + 10, setY);
+			targetDc.drawLine(setX , setY, setX + 10, setY);
 			setX = setX +  16;
 		//	dc.fillRoundedRectangle(ULBGx  + ULBGwidth/2 + ULBGwidth/8, setY, ULBGwidth/8 - 2 , 3, 3);
 		}
 		if (ActMonitor.getInfo().moveBarLevel >= 4) {
-			dc.drawLine(setX , setY, setX + 10, setY);
+			targetDc.drawLine(setX , setY, setX + 10, setY);
 			setX = setX +  16;
 		//	dc.fillRoundedRectangle(ULBGx  + ULBGwidth/2 + ULBGwidth/8 * 2, setY, ULBGwidth/8 - 2 , 3, 3);
 		}
 		if (ActMonitor.getInfo().moveBarLevel == 5) {
-			dc.drawLine(setX , setY, setX + 10, setY);
+			targetDc.drawLine(setX , setY, setX + 10, setY);
 		//	dc.fillRoundedRectangle(ULBGx  + ULBGwidth/2 + ULBGwidth/8 * 3, setY, ULBGwidth/8 + 2 , 3, 3);
 		}
 	}	  	
@@ -1293,17 +1620,32 @@ var setX = center_x;
   // Center Point with Bluetooth connection
 	  	//if ((App.getApp().getProperty("CenterDotEnable"))) {
 	  	if ((App.getApp().getProperty("ConnectionIndicator") ==1) && !(Sys.getDeviceSettings().phoneConnected)) {
+<<<<<<< HEAD
 				dc.setColor((App.getApp().getProperty("BackgroundColor")), Gfx.COLOR_TRANSPARENT);
 		} else {
   			dc.setColor((App.getApp().getProperty("HandsColor1")), Gfx.COLOR_TRANSPARENT);
+=======
+				targetDc.setColor((App.getApp().getProperty("BackgroundColor")), Gfx.COLOR_TRANSPARENT);
+		} else {
+  			targetDc.setColor((App.getApp().getProperty("HandsColor2")), Gfx.COLOR_TRANSPARENT);
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 	   	} 
 
 	    
-	    dc.fillCircle(width / 2, height / 2, 5);
-	    dc.setPenWidth(2);
-     	dc.setColor((App.getApp().getProperty("HandsColor2")), Gfx.COLOR_TRANSPARENT);
-	    dc.drawCircle(width / 2, height / 2 , 5);
+	    targetDc.fillCircle(width / 2, height / 2, 5);
+	    targetDc.setPenWidth(2);
+     	targetDc.setColor((App.getApp().getProperty("HandsColor2")), Gfx.COLOR_TRANSPARENT);
+	    targetDc.drawCircle(width / 2, height / 2 , 5);
+
+/* 
+ 	//Draw crosshairs for positioning things
+ 		targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
+ 		targetDc.setPenWidth(2);
+ 		targetDc.drawLine(width/2,0,width/2,height);
+ 		targetDc.drawLine(0,height/2,width,height/2);
+*/
  	
+<<<<<<< HEAD
  	
     //draw second hand  
        if (isAwake) {
@@ -1325,10 +1667,118 @@ var setX = center_x;
 //Sys.println("free: " + System.getSystemStats().freeMemory);
 //Sys.println("total: " + System.getSystemStats().totalMemory);
 //Sys.println("");
+=======
+ 	// Output the offscreen buffers to the main display if required.
+        drawBackground(dc);
+        
+ 	 //draw second hand 
+ 	 	var SecHandStyle = App.getApp().getProperty("SecHandsForm");
+		if( partialUpdatesAllowed && (SecHandStyle==3) ) {
+            // If this device supports partial updates and they are currently
+            // allowed run the onPartialUpdate method to draw the second hand.
+            Sys.println("Entering onPartialUpdate");
+            onPartialUpdate( dc );
+        } else if (isAwake) {
+			//var SecHandEnable = (App.getApp().getProperty("SecHandEnable"));
+	   			if (SecHandStyle > 0) {
+	   			Sys.println("Entering drawSecHands with arg: "+SecHandStyle);
+	 			hands.drawSecondHands(dc, SecHandStyle);
+	 			}
+ 		}
+ 
+
+ 
+Sys.println("used: " + System.getSystemStats().usedMemory);
+Sys.println("free: " + System.getSystemStats().freeMemory);
+Sys.println("total: " + System.getSystemStats().totalMemory);
+Sys.println("");
+          fullScreenRefresh = false;
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
           
-}
-    
-   
+} // end onUpdate(dc)-----------------------------------
+       
+
+    // Handle the partial update event
+    function onPartialUpdate( dc ) {
+        // If we're not doing a full screen refresh we need to re-draw the background
+        // before drawing the updated second hand position. Note this will only re-draw
+        // the background in the area specified by the previously computed clipping region.
+        if(App.getApp().getProperty("SecHandsForm") != 3) {  //draw 1Hz second hand if you so chose
+        	return;
+        }
+        if(!fullScreenRefresh) {
+            drawBackground(dc);
+        }
+
+        var clockTime = System.getClockTime();
+        var secondHand = App.getApp().getProperty("Reverse") ? -1 * (clockTime.sec / 60.0) * Math.PI * 2 : (clockTime.sec / 60.0) * Math.PI * 2;
+      
+        	var r1;      	
+        	var outerRad =0;
+        	var center_x = dc.getWidth() / 2;
+        	var center_y = dc.getHeight() / 2;    
+			r1 = dc.getWidth()/2 - outerRad; //outside
+			
+			//screenCenterPoint = [center_x+r1*Math.sin(secondHand),center_y-r1*Math.cos(secondHand)];
+			screenCenterPoint = [width/2, height/2];			
+			//var secondHandPoints = generateHandCoordinates(center_x+r1*Math.sin(secondHand),center_y-r1*Math.cos(secondHand), center_x+r2*Math.sin(secondHand),center_y-r2*Math.cos(secondHand));
+        
+         	var secondHandPoints = generateHandCoordinates(screenCenterPoint, secondHand, 100, 30, 3);
+
+
+
+
+        // Update the cliping rectangle to the new location of the second hand.
+        curClip = getBoundingBox( secondHandPoints );
+        var bboxWidth = curClip[1][0] - curClip[0][0] + 1;
+        var bboxHeight = curClip[1][1] - curClip[0][1] + 1;
+        dc.setClip(curClip[0][0], curClip[0][1], bboxWidth, bboxHeight);
+
+        // Draw the second hand to the screen.
+        dc.setColor(App.getApp().getProperty("SecHands1Color"), Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon(secondHandPoints);
+ 			
+ 		//fullScreenRefresh = false;
+ 			
+    }
+
+    // Compute a bounding box from the passed in points
+    function getBoundingBox( points ) {
+        var min = [9999,9999];
+        var max = [0,0];
+
+        for (var i = 0; i < points.size(); ++i) {
+            if(points[i][0] < min[0]) {
+                min[0] = points[i][0];
+            }
+
+            if(points[i][1] < min[1]) {
+                min[1] = points[i][1];
+            }
+
+            if(points[i][0] > max[0]) {
+                max[0] = points[i][0];
+            }
+
+            if(points[i][1] > max[1]) {
+                max[1] = points[i][1];
+            }
+        }
+
+        return [min, max];
+    }
+
+    function drawBackground(dc) {
+        var width = dc.getWidth();
+        var height = dc.getHeight();
+
+        //If we have an offscreen buffer that has been written to
+        //draw it to the screen.
+        if( offscreenBuffer != null) {
+            dc.drawBitmap(0, 0, offscreenBuffer);
+        }
+ 
+    }
 
     function onEnterSleep() {
         isAwake = false;
@@ -1339,3 +1789,17 @@ var setX = center_x;
         isAwake = true;
     }
 }
+
+class AnalogDelegate extends Ui.WatchFaceDelegate {
+    // The onPowerBudgetExceeded callback is called by the system if the
+    // onPartialUpdate method exceeds the allowed power budget. If this occurs,
+    // the system will stop invoking onPartialUpdate each second, so we set the
+    // partialUpdatesAllowed flag here to let the rendering methods know they
+    // should not be rendering a second hand.
+    function onPowerBudgetExceeded(powerInfo) {
+        System.println( "Average execution time: " + powerInfo.executionTimeAverage );
+        System.println( "Allowed execution time: " + powerInfo.executionTimeLimit );
+        partialUpdatesAllowed = false;
+    }
+}
+

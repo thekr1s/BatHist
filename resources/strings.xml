@@ -26,6 +26,7 @@
     <string id="SecHands1ColorTitle">First color of second hand</string>
     <string id="SecHands2ColorTitle">Second color of second hand</string>
     
+<<<<<<< HEAD
     <string id="DigiFontTitle">Font of displays</string>
     <string id="DateFormatTitle">Date format</string>
     <string id="UpperDispEnableTitle">Enable upper display</string>
@@ -106,6 +107,94 @@
     <string id="DF7">MM/DD/YYYY</string>
     
    
+=======
+    <string id="SF0">No second hand</string>
+    <string id="SF1">Classic</string>
+    <string id="SF2">Simple</string>
+    <string id="SF3">Simple, 1Hz if possible</string>
+    
+    <string id="DigiFontTitle">Font of displays</string>
+    <string id="DateFormatTitle">Date format</string>
+    <string id="UpperDispEnableTitle">Enable upper display</string>
+    <string id="UDInfoTitle">Info upper display</string>
+    <string id="LowerDispEnableTitle">Enable lower display</string>
+    <string id="LDInfoTitle">Info lower display</string>
+    <string id="SecHandEnableTitle">Enable second hand</string>
+    
+    <string id="BatProgressEnableTitle">Enable battery progress marker</string>
+    <string id="StepProgressEnableTitle">Enable step progress marker</string>
+    <string id="HandOutlinesEnableTitle">Enable outline around some hands</string>
+    <string id="SunMarkersEnableTitle">Enable sunrise/sunset markers (only round watches)</string>
+    <string id="MoonEnableTitle">Enable moon phase on pos. 3 o´clock</string>
+    <string id="MoveBarEnableTitle">Enable inactivity move bar </string>
+    
+    <string id="AlmMsgEnableTitle">Enable center indicators</string>
+	<string id="AlmMsgTitle">Indicator info</string>
+    <string id="IF1">Alm/Msg count</string>
+    <string id="IF2">Alm/Msg only indicator</string>
+    <string id="IF3">Day and week of year</string>
+    <string id="IF4">sunrise / sunset</string>
+    <string id="IF5">elevation / distance</string>
+    <string id="IF6">stepgoal / steps</string>
+    
+    
+    
+    <string id="CenterDotEnableTitle">Enable center dot as BT indicator</string>
+    
+    <string id="ConnectionIndicatorTitle">Show connection indicator</string>
+    <string id="CI0">No connection indicator</string>
+    <string id="CI1">Center dot as BT indicator</string>
+    <string id="CI2">Phone connected icon at 12</string>
+    <string id="CI3">Phone disconnected icon at 12</string>
+    <string id="CI4">Phone state instead of 12</string>
+    
+    <string id="CIPrompt">How to show whether or not there is a connection to the phone</string>
+
+    <string id="ColorBlack">Black</string>
+    <string id="ColorDarkGray">Dark Gray</string>
+    <string id="ColorLightGray">Light Gray</string>
+    <string id="ColorWhite">White</string>    
+    <string id="ColorRed">Red</string>
+    <string id="ColorDarkRed">Dark Red</string>
+    <string id="ColorOrange">Orange</string>
+    <string id="ColorYellow">Yellow</string>
+    <string id="ColorGreen">Green</string>    
+    <string id="ColorDarkGreen">Dark Green</string>
+    <string id="ColorBlue">Blue</string>
+    <string id="ColorDarkBlue">Dark Blue</string>    
+    <string id="ColorPurple">Purple</string>
+    <string id="ColorPink">Pink</string>
+
+    <string id="Color00">00</string>
+    <string id="Color55">55</string>
+    <string id="ColorAA">AA</string>
+    <string id="ColorFF">FF</string>
+    
+   
+    <string id="NbrNo">No numbers</string>
+    <string id="NbrNo12">No numbers but fat 12</string>    
+    <string id="NbrRace">Race</string>
+    <string id="NbrFat">Fat</string>
+    <string id="NbrClassic">Classic</string>
+    <string id="NbrRoman">Roman</string>    
+    <string id="NbrSimple">Simple</string>
+   
+   
+    <string id="DFDigital">Digital</string>
+    <string id="DFClassic">Classic</string> 
+    <string id="DFSimple">Simple</string> 
+    
+    <string id="DF1">Weekday DD Month</string>
+    <string id="DF2">Weekday Month DD</string>
+    <string id="DF3">Weekday DD</string>
+    <string id="DF4">DD.MM.YYYY</string>
+    <string id="DF5">YYYY-MM-DD</string>
+    <string id="DF6">DD/MM/YYYY</string>
+    <string id="DF7">MM/DD/YYYY</string>
+    
+   
+    <string id="DNone">None</string>
+>>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
     <string id="DDate">Date</string>
     <string id="DSteps">Steps</string>
     <string id="DStepstogo">Steps to go</string>
