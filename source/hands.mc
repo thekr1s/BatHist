@@ -433,12 +433,8 @@ module hands{
 		r1 = 35;
 		r2 = seconds_radius;
 		
-<<<<<<< HEAD
-		if (SecHandsForm == 1) { //classic		
-=======
 		//if (SecHandsForm == 1) { //classic
 		if (SecHandsStyle == 1) { //classic		
->>>>>>> branch 'fenix5' of https://github.com/shortattentionspan/Aviatorlike
 			//untere Raute		
 			hand =        	[
 							[center_x+r0*Math.sin(alpha),center_y-r0*Math.cos(alpha)],						
