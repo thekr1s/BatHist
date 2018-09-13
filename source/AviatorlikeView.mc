@@ -113,8 +113,8 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	LLINFOx = 175;
 		   	LLINFOy = 130; 
 		    
-		   	moonx = 165;
-		   	moony = 88;
+		   	moonx = 130;
+		   	moony = 130;
 		   	moonwidth = 40; 		
 		}
 		if (width == 240 && height == 240) {
@@ -1038,9 +1038,9 @@ function drawBattery(dc) {
 					} else {
 						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
-		    		if (! MoonEnable) {
+		    		//if (! MoonEnable) {
 		    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
-	        		}
+	        		//}
 	        		targetDc.drawText(width / 2, height - 54, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
 	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
@@ -1051,9 +1051,9 @@ function drawBattery(dc) {
 					} else {
 						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
-		    		if (! MoonEnable) {	
+		    		//if (! MoonEnable) {	
 		    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
-	        		}
+	        		//}
 	        		targetDc.drawText(width / 2, height - 52, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
 	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
@@ -1064,9 +1064,9 @@ function drawBattery(dc) {
 					} else {
 						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
-		    		if (! MoonEnable) {	
+		    		//if (! MoonEnable) {	
 		    			targetDc.drawText(width - 16, (height / 2) - 18, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
-	        		}
+	        		//}
 	        		targetDc.drawText(width / 2, height - 48, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
 	        		targetDc.drawText(16, (height / 2) - 18, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		    	}
@@ -1077,9 +1077,9 @@ function drawBattery(dc) {
 					} else {
 						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
-		    		if (! MoonEnable) {	
+		    		//if (! MoonEnable) {	
 		    			targetDc.drawText(width - 16, (height / 2) - 22, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
-	        		}
+	        		//}
 	        		targetDc.drawText(width / 2, height - 50, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
 	        		targetDc.drawText(16, (height / 2) - 22, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
@@ -1089,9 +1089,9 @@ function drawBattery(dc) {
 					} else {
 						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 					}
-		    		if (! MoonEnable) {
+		    		//if (! MoonEnable) {
 		    			targetDc.drawText(width - 16, (height / 2) - 22, Gfx.FONT_SYSTEM_LARGE  , rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
-	        		}
+	        		//}
 	        		targetDc.drawText(width / 2, height - 45, Gfx.FONT_SYSTEM_LARGE   , "6", Gfx.TEXT_JUSTIFY_CENTER);
 	        		targetDc.drawText(16, (height / 2) - 22, Gfx.FONT_SYSTEM_LARGE   , leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
@@ -1485,10 +1485,10 @@ var setX = center_x;
  
 
  
-Sys.println("used: " + System.getSystemStats().usedMemory);
-Sys.println("free: " + System.getSystemStats().freeMemory);
-Sys.println("total: " + System.getSystemStats().totalMemory);
-Sys.println("");
+//Sys.println("used: " + System.getSystemStats().usedMemory);
+//Sys.println("free: " + System.getSystemStats().freeMemory);
+//Sys.println("total: " + System.getSystemStats().totalMemory);
+//Sys.println("");
           fullScreenRefresh = false;
           
 } // end onUpdate(dc)-----------------------------------
