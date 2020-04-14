@@ -109,6 +109,7 @@
     <string id="DF5">YYYY-MM-DD</string>
     <string id="DF6">DD/MM/YYYY</string>
     <string id="DF7">MM/DD/YYYY</string>
+    <string id="DF8">DD</string>
     
    
     <string id="DNone">None</string>

@@ -103,9 +103,9 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	ULINFOx = 175;
 		   	ULINFOy = 50;   
 		    
-		   	LLBGx = 38;
+		   	LLBGx = 88;
 		   	LLBGy = 130;
-		   	LLBGwidth = 142;
+		   	LLBGwidth = 42;
 		    
 		   	LLTEXTx = 109;
 		   	LLTEXTy = 132;
@@ -114,7 +114,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	LLINFOy = 130; 
 		    
 		   	moonx = 130;
-		   	moony = 130;
+		   	moony = 48;
 		   	moonwidth = 40; 		
 		}
 		if (width == 240 && height == 240) {
@@ -129,9 +129,9 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	ULINFOx = 188;
 		   	ULINFOy = 57;   
 		    
-		   	LLBGx = 45;
+		   	LLBGx = 75;
 		   	LLBGy = 147;
-		   	LLBGwidth = 150;
+		   	LLBGwidth = 90;
 		    
 		   	LLTEXTx = 120;
 		   	LLTEXTy = 149;
@@ -250,7 +250,7 @@ class AviatorlikeView extends Ui.WatchFace{
             var n;      
         	var alpha, beta, r1, r2;
 
-        	//alle 5 minutes
+        	//alle 1 minutes
             dc.setPenWidth(3);
             dc.setColor(App.getApp().getProperty("MinutesColor"), Gfx.COLOR_TRANSPARENT);
            	r1 = width/2 -5; //inside
@@ -263,7 +263,7 @@ class AviatorlikeView extends Ui.WatchFace{
      		}
         
         	//alle 5 minutes
-            dc.setPenWidth(3);
+            dc.setPenWidth(4);
             dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
            	//r1 = width/2 -20; //inside
            	r1 = width/2 - (5 * App.getApp().getProperty("markslenth"));
@@ -276,8 +276,6 @@ class AviatorlikeView extends Ui.WatchFace{
      		}      
  
     }
- 
- 
     
     function drawQuarterHashmarks(dc){          
       //12, 3, 6, 9
@@ -365,7 +363,27 @@ class AviatorlikeView extends Ui.WatchFace{
     } 
 
  
+     // Draw the hash mark symbols on the watch-------------------------------------------------------
+    function drawGauges(dc) {
+        dc.setPenWidth(6);
+		var battery = Toybox.System.getSystemStats().battery / 100;       
 
+		// Right gauge
+        var start = 360 / 12 * -2;
+        var full_length = 360 / 12 * 4;
+        var dir = Gfx.ARC_CLOCKWISE;
+		for (var i = 0; i < 2; i++) {
+            dc.setColor(Graphics.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+			dc.drawArc(width/2, width/2, width/2-3, dir, start + battery * full_length, start);
+            dc.setColor(Graphics.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+			dc.drawArc(width/2, width/2, width/2-3, dir, start + full_length, start + battery * full_length);
+			// Left gauge
+            start = 360 / 12 * 8;
+            full_length = 360 / 12 * -4;
+            dir = Gfx.ARC_COUNTER_CLOCKWISE;
+		}
+   }
+ 
          
 	function drawDigitalTime() {
 
@@ -512,7 +530,7 @@ function drawBattery(dc) {
         	var lenth = 15;
      
 			r1 = width/2 - outerRad; //outside
-			r2 = r1 -lenth; ////Länge des Bat-Zeigers
+			r2 = r1 -lenth; ////Lï¿½nge des Bat-Zeigers
 										
 			//if (!App.getApp().getProperty("UseIcons")){
 				hand =     [[center_x+r1*Math.sin(alpha+0.1),center_y-r1*Math.cos(alpha+0.1)],
@@ -585,7 +603,7 @@ function drawBattery(dc) {
         	var lenth = 15;
      
 			r1 = width/2 - outerRad; //outside
-			r2 = r1 -lenth; ////Länge des Step-Zeigers
+			r2 = r1 -lenth; ////Lï¿½nge des Step-Zeigers
 										
 			hand =     [[center_x+r2*Math.sin(alpha+0.1),center_y-r2*Math.cos(alpha+0.1)],
 						[center_x+r1*Math.sin(alpha),center_y-r1*Math.cos(alpha)],
@@ -920,32 +938,10 @@ function drawBattery(dc) {
         targetDc.setColor(Gfx.COLOR_TRANSPARENT, BGColor);
         targetDc.clear();
       
-   // Draw the hash marks ---------------------------------------------------------------------------
+	    drawGauges(targetDc);
         drawHashMarks(targetDc);  
         drawQuarterHashmarks(targetDc);  
-   
      
-        
-        
-    // Indicators, moon ---------------------------------------------------------------------------       
-        //! Moon phase
-/*		var MoonEnable = (App.getApp().getProperty("MoonEnable"));
-		if (MoonEnable) {             			
-	   		var now = Time.now();
-			var dateinfo = Calendar.info(now, Time.FORMAT_SHORT);
-	        var clockTime = Sys.getClockTime();
-	        var moon = new Moon(Ui.loadResource(Rez.Drawables.moon), moonwidth, moonx, moony);
-			moon.updateable_calcmoonphase(targetDc, dateinfo, clockTime.hour);
-			targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
-			targetDc.setPenWidth(1);	   
-	//Sys.println("moonx="+moonx+"  moony="+moony+"  moonwidth="+moonwidth);		
-	 		targetDc.drawCircle(moonx+moonwidth/2,moony+moonwidth/2,moonwidth/2-1);
-	 		
-	 		//dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
-	 		//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2-12, fontLabel, moon.c_moon_label, Gfx.TEXT_JUSTIFY_CENTER);
-			//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2, fontLabel, moon.c_phase, Gfx.TEXT_JUSTIFY_CENTER);
-		} 
-*/	
 		//!progress battery------------
 		var BatProgressEnable = (App.getApp().getProperty("BatProgressEnable"));
        	if (BatProgressEnable) {
@@ -1164,7 +1160,16 @@ function drawBattery(dc) {
 	        		targetDc.drawText(16, (height / 2) - 17, Gfx.FONT_SYSTEM_LARGE   , leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 		   		}
 	   	} 
-       
+	   	
+	   	
+	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
+	    var LowerDispEnable = (App.getApp().getProperty("LDInfo")!=0);
+        if (LowerDispEnable) {
+			if (App.getApp().getProperty("ShowDigitalBackground")) {
+			  targetDc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
+	       	  targetDc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
+	       	  }
+        }
 
   // Draw hands under a lot sorta out of order ------------------------------------         
     	if (App.getApp().getProperty("HandsBehind")) {
@@ -1320,11 +1325,6 @@ function drawBattery(dc) {
         	}      	    
 	    }
 	    	
-	    	   
-	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
-	    var LowerDispEnable = (App.getApp().getProperty("LDInfo")!=0);
-
-	  	
 		//Anzeige oberes Display--------------------------  
 		if (UpperDispEnable) {
 			var displayInfo = (App.getApp().getProperty("UDInfo"));
@@ -1353,10 +1353,6 @@ function drawBattery(dc) {
 		//	Sys.println("LDInfo: " + displayInfo);
 			setLabel(displayInfo);
 			//background for lower display
-			if (App.getApp().getProperty("ShowDigitalBackground")) {
-			  targetDc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
-	       	  targetDc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
-	       	  }
 	       	
 	      // 	dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
 	      // 	dc.drawRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);

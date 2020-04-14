@@ -386,6 +386,7 @@
             <listEntry value="5">@Strings.DF5</listEntry>
             <listEntry value="6">@Strings.DF6</listEntry>
             <listEntry value="7">@Strings.DF7</listEntry>
+            <listEntry value="8">@Strings.DF8</listEntry>
         </settingConfig>
     </setting>
     
