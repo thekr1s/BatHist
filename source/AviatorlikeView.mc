@@ -104,7 +104,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	ULINFOy = 50;   
 		    
 		   	LLBGx = 88;
-		   	LLBGy = 130;
+		   	LLBGy = 134;
 		   	LLBGwidth = 42;
 		    
 		   	LLTEXTx = 109;
@@ -250,26 +250,25 @@ class AviatorlikeView extends Ui.WatchFace{
             var n;      
         	var alpha, beta, r1, r2;
 
-        	//alle 1 minutes
-            dc.setPenWidth(3);
-            dc.setColor(App.getApp().getProperty("MinutesColor"), Gfx.COLOR_TRANSPARENT);
-           	r1 = width/2 -5; //inside
-			r2 = width/2 +1; //outside. Yeah, I know that's making the radius longer than the screen, but it makes the tic marks render nicer
-//           	for (var alpha = Math.PI / 6; alpha <= 13 * Math.PI / 6; alpha += (Math.PI / 30)) { //jede Minute
-           	for (var alpha = Math.PI / 30; alpha <= 2 * Math.PI ; alpha += (Math.PI / 6)) { //jede Minute 
-           		for (var beta = 0; beta <= (Math.PI / 10); beta += (Math.PI/30)) {          	 			
-					dc.drawLine(center_x+r1*Math.sin(alpha+beta),center_y-r1*Math.cos(alpha+beta), center_x+r2*Math.sin(alpha+beta),center_y-r2*Math.cos(alpha+beta)); 
-				}
-     		}
-        
+
+			if (App.getApp().getProperty("MinutesColor") != 0x000001) {
+	        	//alle 1 minutes
+	            dc.setPenWidth(3);
+	            dc.setColor(App.getApp().getProperty("MinutesColor"), Gfx.COLOR_TRANSPARENT);
+	           	r1 = width/2 -5; //inside
+				r2 = width/2 +1; //outside. Yeah, I know that's making the radius longer than the screen, but it makes the tic marks render nicer
+	           	for (var alpha = Math.PI / 30; alpha <= 2 * Math.PI ; alpha += (Math.PI / 6)) { //jede Minute 
+	           		for (var beta = 0; beta <= (Math.PI / 10); beta += (Math.PI/30)) {          	 			
+						dc.drawLine(center_x+r1*Math.sin(alpha+beta),center_y-r1*Math.cos(alpha+beta), center_x+r2*Math.sin(alpha+beta),center_y-r2*Math.cos(alpha+beta)); 
+					}
+	     		}
+			}        
         	//alle 5 minutes
             dc.setPenWidth(4);
             dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
-           	//r1 = width/2 -20; //inside
            	r1 = width/2 - (5 * App.getApp().getProperty("markslenth"));
-			//r2 = width/2 +1; //outside- redundant
-           	//for (var alpha = Math.PI / 6; alpha <= 13 * Math.PI / 6; alpha += (Math.PI / 30)) { //jede Minute
-         	for (var alpha = Math.PI / 6; alpha <= 11 * Math.PI / 6; alpha += (Math.PI / 3)) { //jede 5. Minute  			
+			r2 = width/2 - 4;
+			for (var alpha = Math.PI / 6; alpha <= 11 * Math.PI / 6; alpha += (Math.PI / 3)) { //jede 5. Minute  			
 				dc.drawLine(center_x+r1*Math.sin(alpha),center_y-r1*Math.cos(alpha), center_x+r2*Math.sin(alpha),center_y-r2*Math.cos(alpha)); 
 				alpha += Math.PI / 6;  
 				dc.drawLine(center_x+r1*Math.sin(alpha),center_y-r1*Math.cos(alpha), center_x+r2*Math.sin(alpha),center_y-r2*Math.cos(alpha));    	
@@ -952,15 +951,6 @@ function drawBattery(dc) {
        	if (StepProgressEnable) {
 			drawStepGoal(targetDc);
 		}
-		//! Markers for sunrise and sunset
-		var SunmarkersEnable = (App.getApp().getProperty("SunMarkersEnable"));		
-       	if (SunmarkersEnable && screenShape == 1) {
-       		//Sys.println("sunmarkers "+ SunmarkersEnable);
-			extras.drawSunMarkers(targetDc);
-		}
-		
-//		drawBackground(dc); 
-		
 		
 		 //! Moon phase
 		var MoonEnable = (App.getApp().getProperty("MoonEnable"));
@@ -1161,13 +1151,19 @@ function drawBattery(dc) {
 		   		}
 	   	} 
 	   	
+		//! Markers for sunrise and sunset
+		var SunmarkersEnable = (App.getApp().getProperty("SunMarkersEnable"));		
+       	if (SunmarkersEnable && screenShape == 1) {
+			extras.drawSunMarkers(targetDc);
+		}		
 	   	
 	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
 	    var LowerDispEnable = (App.getApp().getProperty("LDInfo")!=0);
         if (LowerDispEnable) {
+			//background for lower display
 			if (App.getApp().getProperty("ShowDigitalBackground")) {
 			  targetDc.setColor(App.getApp().getProperty("DigitalBackgroundColor"), Gfx.COLOR_TRANSPARENT);  
-	       	  targetDc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
+	       	  targetDc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 28, 5);
 	       	  }
         }
 
@@ -1352,10 +1348,6 @@ function drawBattery(dc) {
 			var displayInfo = (App.getApp().getProperty("LDInfo"));
 		//	Sys.println("LDInfo: " + displayInfo);
 			setLabel(displayInfo);
-			//background for lower display
-	       	
-	      // 	dc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
-	      // 	dc.drawRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 38, 5);
 	       	      	      	 
         	targetDc.setColor((App.getApp().getProperty("ForegroundColor")), Gfx.COLOR_TRANSPARENT);
         	targetDc.drawText(LLTEXTx, LLTEXTy, fontDigital, labelText, Gfx.TEXT_JUSTIFY_CENTER);
@@ -1414,15 +1406,6 @@ var setX = center_x;
 		}
 	}	  	
 	 
-	  	
-	  	
-
-
-
-
-
-	        
-
 
   // Draw hands ------------------------------------------------------------------         
      if (!App.getApp().getProperty("HandsBehind")) {

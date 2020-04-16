@@ -216,6 +216,7 @@
     
         <setting propertyKey="@Properties.MinutesColor" title="@Strings.MinutesColorTitle">
         <settingConfig type="list">
+            <listEntry value="0x000001">@Strings.DNone</listEntry>        
             <listEntry value="0x000000">@Strings.ColorBlack</listEntry>        
             <listEntry value="0x555555">@Strings.ColorDarkGray</listEntry>
             <listEntry value="0xAAAAAA">@Strings.ColorLightGray</listEntry>

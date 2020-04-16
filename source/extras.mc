@@ -59,22 +59,18 @@ module extras{
         	var center_y = dc.getHeight() / 2;
      
 			r1 = dc.getWidth()/2 - outerRad; //outside
-			r2 = r1 -lenth; ////Länge des Zeigers
+			r2 = r1 -lenth; ////Lï¿½nge des Zeigers
      
 			dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
-			dc.setPenWidth(2);		
-			dc.drawLine(center_x+r1*Math.sin(alphaSunrise),center_y-r1*Math.cos(alphaSunrise), center_x+r2*Math.sin(alphaSunrise),center_y-r2*Math.cos(alphaSunrise));		
-			dc.drawLine(center_x+r1*Math.sin(alphaSunset),center_y-r1*Math.cos(alphaSunset), center_x+(r2-10)*Math.sin(alphaSunset),center_y-(r2-10)*Math.cos(alphaSunset));		
 			
 			dc.setPenWidth(1);
 			dc.drawCircle(center_x+(r1-15)*Math.sin(alphaSunrise),center_y-(r1-15)*Math.cos(alphaSunrise),6);			
-			dc.drawCircle(center_x+(r1-5)*Math.sin(alphaSunset),center_y-(r1-5)*Math.cos(alphaSunset),6);
+			dc.drawCircle(center_x+(r1-15)*Math.sin(alphaSunset),center_y-(r1-15)*Math.cos(alphaSunset),6);			
 			
-			//dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);
-			dc.setColor(0xFFFF00, Gfx.COLOR_TRANSPARENT); //Haard coding to a different yellow. Don't think it'll affect 14-color watches...	
+			dc.setColor(Gfx.COLOR_LT_GRAY, Gfx.COLOR_TRANSPARENT); //Haard coding to a different yellow. Don't think it'll affect 14-color watches...	
 			dc.fillCircle(center_x+(r1-15)*Math.sin(alphaSunrise),center_y-(r1-15)*Math.cos(alphaSunrise),5);	
-			dc.setColor(Gfx.COLOR_DK_BLUE, Gfx.COLOR_TRANSPARENT);
-			dc.fillCircle(center_x+(r1-5)*Math.sin(alphaSunset),center_y-(r1-5)*Math.cos(alphaSunset),5); 			      
+			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_TRANSPARENT);
+			dc.fillCircle(center_x+(r1-15)*Math.sin(alphaSunset),center_y-(r1-15)*Math.cos(alphaSunset),5);	
 		}			
 	}
 	
