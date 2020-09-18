@@ -26,7 +26,7 @@ class BatHist {
 			for (var i = 0; i < _history_size - 1; i++) {
 				history[i] = history[i + 1];					
 			}
-			history[_history_size] = Toybox.System.getSystemStats().battery;
+			history[_history_size - 1] = Toybox.System.getSystemStats().battery;
 			ts_last_update_hour += 1;
 			ts_last_update_hour %= 24;
 		}
