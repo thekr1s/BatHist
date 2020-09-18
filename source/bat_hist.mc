@@ -2,23 +2,36 @@
 using Toybox.Time as Time;
 using Toybox.System as Sys;
 using Toybox.Graphics as Gfx;
+using Toybox.Application as App;
 
 const _history_size = 100;
 const _graph_height = 30;
+const STOR_ID_HISTORY = "HIST";
+const STOR_ID_LAST_TS = "LAST";
 
 class BatHist {
 	var ts_last_update_hour = 0;
-	var history = new[_history_size];
+	var history;
 	var center_y, center_x;
 
     function initialize(cent_x, cent_y) {
-		for (var i = 0; i < _history_size; i++) {
-			history[i] = i;					
+		var app = App.getApp();
+		history = app.getProperty(STOR_ID_HISTORY);
+		ts_last_update_hour = app.getProperty(STOR_ID_LAST_TS);
+
+		if (history == null) {
+		    history = new[_history_size];
+			for (var i = 0; i < _history_size; i++) {
+				history[i] = i;					
+			}
 		}
-		ts_last_update_hour = System.getClockTime().hour;
+		if (ts_last_update_hour == null) {
+			ts_last_update_hour = System.getClockTime().hour;
+		}
 		center_x = cent_x;
 		center_y = cent_y;
 	}
+
 
 	function update() {
 		var hour = System.getClockTime().hour;
@@ -29,6 +42,10 @@ class BatHist {
 			history[_history_size - 1] = Toybox.System.getSystemStats().battery;
 			ts_last_update_hour += 1;
 			ts_last_update_hour %= 24;
+
+			var app = App.getApp();
+			app.setProperty(STOR_ID_HISTORY, history);
+			app.setProperty(STOR_ID_LAST_TS, ts_last_update_hour);
 		}
 	}
 
