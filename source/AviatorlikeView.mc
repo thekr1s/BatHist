@@ -68,6 +68,7 @@ class AviatorlikeView extends Ui.WatchFace{
 		var MessageIcon="4";
 		var ConnectedPhoneIcon="C";
 		var DisconnectedPhoneIcon="D";
+		var bat_hist;
 		
 		
 		
@@ -77,7 +78,6 @@ class AviatorlikeView extends Ui.WatchFace{
 	    fontIcons = Ui.loadResource(Rez.Fonts.id_font_icons);
         screenShape = Sys.getDeviceSettings().screenShape;                  
         Sys.println("Screenshape = " + screenShape);  
-     
         
         fullScreenRefresh = true;
         partialUpdatesAllowed = ((Toybox.Graphics has :BufferedBitmap) && (Toybox.WatchUi.WatchFace has :onPartialUpdate));
@@ -103,18 +103,18 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	ULINFOx = 175;
 		   	ULINFOy = 50;   
 		    
-		   	LLBGx = 88;
-		   	LLBGy = 134;
+		   	LLBGx = 37;
+		   	LLBGy = 137;
 		   	LLBGwidth = 42;
 		    
-		   	LLTEXTx = 109;
-		   	LLTEXTy = 132;
+		   	LLTEXTx = 60;
+		   	LLTEXTy = 135;
 		    
 		   	LLINFOx = 175;
 		   	LLINFOy = 130; 
 		    
 		   	moonx = 130;
-		   	moony = 48;
+		   	moony = 130;
 		   	moonwidth = 40; 		
 		}
 		if (width == 240 && height == 240) {
@@ -215,6 +215,8 @@ class AviatorlikeView extends Ui.WatchFace{
         }
 
         curClip = null;
+
+		bat_hist = new BatHist(center_x, center_y / 2);
 
      //   screenCenterPoint = [dc.getWidth()/2, dc.getHeight()/2];
         
@@ -969,17 +971,18 @@ function drawBattery(dc) {
 			//dc.drawText(moonx+moonwidth/2,moony+moonwidth/2, fontLabel, moon.c_phase, Gfx.TEXT_JUSTIFY_CENTER);
 		} 	
 		
+		bat_hist.update();
+		bat_hist.draw(dc);	
 
-
-      // Draw the numbers --------------------------------------------------------------------------------------
-       var NbrFont = (App.getApp().getProperty("Numbers")); 
-       targetDc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
-       var font1 = 0;  
-       var rightNum="3";
-       var leftNum="9";
-       var twelveNum;
-       var iconDrop = 20;
-       //var twelveFont;
+        // Draw the numbers --------------------------------------------------------------------------------------
+        var NbrFont = (App.getApp().getProperty("Numbers")); 
+        targetDc.setColor((App.getApp().getProperty("NumbersColor")), Gfx.COLOR_TRANSPARENT);
+        var font1 = 0;  
+        var rightNum="3";
+        var leftNum="9";
+        var twelveNum;
+        var iconDrop = 20;
+        //var twelveFont;
        
 		if (App.getApp().getProperty("ConnectionIndicator") < 2){
 			twelveNum=0;
