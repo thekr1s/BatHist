@@ -56,6 +56,10 @@ class BatHist {
 
   		dc.drawRectangle(posx, posy, _history_size, _graph_height);
 		for (var i = 0; i < _history_size; i++) {
+			if (history[i] <= 25){ dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);}
+			else if (history[i] <= 40) {dc.setColor(Gfx.COLOR_YELLOW, Gfx.COLOR_TRANSPARENT);}
+			else {dc.setColor(Gfx.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);}
+
 			var p = posy + _graph_height - history[i] * _graph_height / 100;
 	  		dc.drawLine(posx, posy + _graph_height, posx, p);
 			posx += 1;
