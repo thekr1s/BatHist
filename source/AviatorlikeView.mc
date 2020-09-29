@@ -103,11 +103,11 @@ class AviatorlikeView extends Ui.WatchFace{
 		   	ULINFOx = 175;
 		   	ULINFOy = 50;   
 		    
-		   	LLBGx = 37;
+		   	LLBGx = 42;
 		   	LLBGy = 137;
 		   	LLBGwidth = 42;
 		    
-		   	LLTEXTx = 60;
+		   	LLTEXTx = 65;
 		   	LLTEXTy = 135;
 		    
 		   	LLINFOx = 175;
@@ -364,7 +364,6 @@ class AviatorlikeView extends Ui.WatchFace{
     } 
 
  
-     // Draw the hash mark symbols on the watch-------------------------------------------------------
     function drawGauges(dc) {
         dc.setPenWidth(6);
 		var battery = Toybox.System.getSystemStats().battery / 100;       
@@ -374,9 +373,9 @@ class AviatorlikeView extends Ui.WatchFace{
         var full_length = 360 / 12 * 4;
         var dir = Gfx.ARC_CLOCKWISE;
 		for (var i = 0; i < 2; i++) {
-            dc.setColor(Graphics.COLOR_GREEN, Gfx.COLOR_TRANSPARENT);
+            dc.setColor(Graphics.COLOR_DK_GREEN, Gfx.COLOR_TRANSPARENT);
 			dc.drawArc(width/2, width/2, width/2-3, dir, start + battery * full_length, start);
-            dc.setColor(Graphics.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+            dc.setColor(Graphics.COLOR_DK_RED, Gfx.COLOR_TRANSPARENT);
 			dc.drawArc(width/2, width/2, width/2-3, dir, start + full_length, start + battery * full_length);
 			// Left gauge
             start = 360 / 12 * 8;
