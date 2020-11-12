@@ -66,11 +66,9 @@ class BatHist {
 		posx += _history_size - 1;
 		var color = Gfx.COLOR_GREEN;
 		for (var i = _history_size - 1; i >= 0; i--) {
-			if (color != Gfx.COLOR_DK_GRAY) {
-				if (history[i] <= 25){ color = Gfx.COLOR_RED;}
-				else if (history[i] <= 40) {color = Gfx.COLOR_YELLOW;}
-				else {color = Gfx.COLOR_DK_GRAY;}
-			}
+			if (history[i] <= 25){ color = Gfx.COLOR_RED;}
+			else if (history[i] <= 40) {color = Gfx.COLOR_YELLOW;}
+			else {color = Gfx.COLOR_DK_GRAY;}
 			dc.setColor(color, Gfx.COLOR_TRANSPARENT);
 			var p = posy + _graph_height - history[i] * _graph_height / 100;
 	  		dc.drawLine(posx, posy + _graph_height, posx, p);
