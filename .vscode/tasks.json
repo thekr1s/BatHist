@@ -4,24 +4,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
-            "type": "shell",
-            "command": "./build.sh",
+            "type": "monkeyc",
+            "device": "fenix3_hr",
+            "simulatorBuild": true,
             "problemMatcher": [
-                "$gcc"
+                "$monkeyc.error",
+                "$monkeyc.fileWarning",
+                "$monkeyc.genericWarning"
             ],
+            "label": "monkeyc: fenix3_hr",
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "label": "run",
-            "type": "shell",
-            "command": "./run.sh",
-            "problemMatcher": [
-                "$gcc"
-            ]
         }
     ]
 }

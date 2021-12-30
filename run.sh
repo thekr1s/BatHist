@@ -12,4 +12,4 @@ connectiq&
 sleep 3
 
 # run the app, as the corresponding device type
-monkeydo AviatorLike.prg fenix3
+monkeydo BatHist.prg fenix3

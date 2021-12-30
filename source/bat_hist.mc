@@ -22,7 +22,7 @@ class BatHist {
 		if (history == null || history.size() != _history_size) {
 		    history = new[_history_size];
 			for (var i = 0; i < _history_size; i++) {
-				history[i] = i;					
+				history[i] = 100 - i % 100;					
 			}
 		}
 		if (ts_last_update_hour == null) {
@@ -38,14 +38,20 @@ class BatHist {
 		if (hour != ts_last_update_hour) {
 			ts_last_update_hour += 1;
 			ts_last_update_hour %= 24;
-			if (hour % 2 == 0) {
+			if (ts_last_update_hour % 2 == 0) {
 				// Only update once every two hours
+				var last = history[_history_size - 1];
+				var dh = hour - ts_last_update_hour;
+				var db = Toybox.System.getSystemStats().battery - last;
+				if (dh != 0) {
+					db = 2 * db / dh;
+				}
+				Sys.println("update " + dh + " " + last + " " + db);
 				// Shift the whole graph to the left.
 				for (var i = 0; i < _history_size - 1; i++) {
 					history[i] = history[i + 1];					
 				}
-				history[_history_size - 1] = Toybox.System.getSystemStats().battery;
-
+				history[_history_size - 1] = db + last;
 				var app = App.getApp();
 				app.setProperty(STOR_ID_HISTORY, history);
 				app.setProperty(STOR_ID_LAST_TS, ts_last_update_hour);
@@ -54,14 +60,14 @@ class BatHist {
 		}
 	}
 
-	function draw(dc) {
-		var posx = center_x - _history_size / 2;
-		var posy = center_y - _graph_height / 2 + 15;
+	function draw(dc, posx, posy) {
+		posx = posx - _history_size / 2;
+		// var posy = center_y - _graph_height / 2 + 15;
 		dc.setColor(Gfx.COLOR_DK_GRAY, Gfx.COLOR_TRANSPARENT);
   		dc.drawRectangle(posx, posy, _history_size, _graph_height);
 
 		// Set last entry always to tha actual battery status.
-		history[_history_size - 1] = Toybox.System.getSystemStats().battery;
+		// history[_history_size - 1] = Toybox.System.getSystemStats().battery;
 		
 		posx += _history_size - 1;
 		var color = Gfx.COLOR_GREEN;
