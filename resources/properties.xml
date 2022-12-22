@@ -13,9 +13,13 @@
 	<property id="ConnectionIndicator" type="number">1</property>
 	
 	
+    <property id="SixbitBackground" type="boolean">false</property>
     <property id="UseIcons" type="boolean">false</property>
     
     <property id="BackgroundColor" type="number">0x000000</property>
+    <property id="BackgroundColorR" type="number">0x000000</property>
+    <property id="BackgroundColorG" type="number">0x000000</property>
+    <property id="BackgroundColorB" type="number">0x0000AA</property>
 
     <property id="ShowDigitalBackground" type="boolean">false</property>
     <property id="DigitalBackgroundColor" type="number">0xAAAAAA</property>
@@ -32,7 +36,7 @@
     <property id="HandsColor1" type="number">0xFFFFFF</property>
     <property id="HandsColor2" type="number">0xFFFFFF</property>
     
-    <property id="HandOutlinesEnable" type="boolean">true</property>
+    <property id="HandOutlinesEnable" type="boolean">false</property>
     <property id="HandsOutlineColor" type="number">0x000000</property>
     
     <property id="HandsBehind" type="boolean">false</property>

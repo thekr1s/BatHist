@@ -10,18 +10,18 @@ using Toybox.Graphics as Gfx;
 
 module extras{
 
- function drawSunMarkers(dc) {
+ 	function drawSunMarkers(dc) {
 	// Draw Sunset / sunrise markers -------------------------------------------------------------------------
         
         var alphaSunrise = 0;
         var alphaSunset = 0;
         var hand; 
 
-	   
 	   	var sc = new SunCalc();
 		var lat;
-		var lon;		
-		var loc = Act.getActivityInfo().currentLocation;
+		var lon;
+		var info = Act.getActivityInfo();	
+		var loc = info.currentLocation;
 
 		if (loc == null)
 		{
@@ -47,10 +47,9 @@ module extras{
 			
 			var sunriseTinfo = Time.Gregorian.info(new Time.Moment(sunrise_moment.value() + 30), Time.FORMAT_SHORT);
 			var sunsetTinfo = Time.Gregorian.info(new Time.Moment(sunset_moment.value() + 30), Time.FORMAT_SHORT);
-			var reverseMultiplier= App.getApp().getProperty("Reverse") ? -1 : 1 ;
    	       
-    		alphaSunrise = reverseMultiplier*Math.PI/6*(1.0*sunriseTinfo.hour+sunriseTinfo.min/60.0);
-    		alphaSunset = reverseMultiplier*Math.PI/6*(1.0*sunsetTinfo.hour+sunsetTinfo.min/60.0);
+    		alphaSunrise = Math.PI/6*(1.0*sunriseTinfo.hour+sunriseTinfo.min/60.0);
+    		alphaSunset = Math.PI/6*(1.0*sunsetTinfo.hour+sunsetTinfo.min/60.0);
       
         	var r1, r2;      	
         	var outerRad = 0;

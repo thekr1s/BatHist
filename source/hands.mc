@@ -44,7 +44,6 @@ module hands{
 		var alpha, alpha2; 
 		var r0, r1, r2, r3, r4, r5, r6, r7, hand, hand1;
 		var deflec1, deflec2, deflec3;
-		var reverseMultiplier= App.getApp().getProperty("Reverse") ? -1 : 1 ;// { reverseMultiplier=-1;}
 		
 		clockTime = Sys.getClockTime();
 		//Sys.println("clockTime hour = " + clockTime.hour);
@@ -57,8 +56,8 @@ module hands{
          //Race-Hands-----------------	
 		if (HandsForm == 1) { 	
 				// hours
-				alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
-				alpha2 = alpha-.5*Math.PI;//reverseMultiplier*Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
+				alpha = Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
+				alpha2 = alpha-.5*Math.PI;//Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 				maxRad = hour_radius;				
 				r1 = -20;
 				r2 = 12;
@@ -95,7 +94,7 @@ module hands{
 					}			
 			
 					 // minutes----------------------------------------------
-					alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
+					alpha = Math.PI/30.0*clockTime.min;
 					alpha2 = alpha-Math.PI/2;//Math.PI/30.0*(clockTime.min-15);
 					maxRad = minute_radius;
 				}
@@ -103,7 +102,7 @@ module hands{
 
 	//Pilot-Hands----------------------------------------------------------
 	if (HandsForm == 2 || HandsForm == 6) {
-		alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
+		alpha = Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
 		alpha2 = alpha-.5*Math.PI; //Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 		maxRad = hour_radius;
 		var penWide1;
@@ -184,7 +183,7 @@ module hands{
 		       	}
 				//! minutes settings -------------------------------------------
 				//Stand. for Pilot 
-				alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
+				alpha = Math.PI/30.0*clockTime.min;
 				alpha2 = alpha-.5*Math.PI; //Math.PI/30.0*(clockTime.min-15);
 				maxRad = minute_radius;
 		//		r2 = minute_radius * 2.5/10;
@@ -207,7 +206,7 @@ module hands{
 		//Diver-Hands----------------------------------------	
 		if (HandsForm == 3) { 	
 			//! houres------------------------------------------
-			alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
+			alpha = Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
 			alpha2 = alpha-.5*Math.PI; //Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 			maxRad = hour_radius;			
 			r1 = hour_radius * 6/10; // h�he des Querbalkens
@@ -268,7 +267,7 @@ module hands{
 					dc.drawLine(hand[n][0], hand[n][1], hand[0][0], hand[0][1]);
 			        
 				//! minutes-------------------------------------------------------
-				alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
+				alpha = Math.PI/30.0*clockTime.min;
 				alpha2 = alpha-.5*Math.PI; //Math.PI/30.0*(clockTime.min-15);
 				maxRad = minute_radius;
 				r1 = minute_radius * 6.5/10; // h�he des Querbalkens
@@ -279,7 +278,7 @@ module hands{
 		
 	//Classic-Hands----------------------------------
 		if (HandsForm == 4) {
-			alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);	
+			alpha = Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);	
 			//Tip raute	
 			r0 = 20;
 			r1 = 40; //Entfernung zum rechten winkel
@@ -332,7 +331,7 @@ module hands{
 				dc.drawLine(hand[n][0], hand[n][1], hand[0][0], hand[0][1]);		
 		
 				//! minutes
-				alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
+				alpha = Math.PI/30.0*clockTime.min;
 				maxRad = minute_radius;		
 				r0 = 35;
 				r1 = 55; //Entfernung zum rechten winkel
@@ -353,7 +352,7 @@ module hands{
 	//Simple-Hands----------------------------------------	
 		if (HandsForm == 5) { 	
 			// houres
-			alpha = reverseMultiplier*Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
+			alpha = Math.PI/6*(1.0*clockTime.hour+clockTime.min/60.0);
 			alpha2 = alpha-.5*Math.PI; //Math.PI/6*(1.0*clockTime.hour-3+clockTime.min/60.0);
 			maxRad = hour_radius;	 													
 			deflec1 = 2.5; // hour hand half width in pixels
@@ -384,7 +383,7 @@ module hands{
 					}		
 			        
 					//! minutes--------------
-					alpha = reverseMultiplier*Math.PI/30.0*clockTime.min;
+					alpha = Math.PI/30.0*clockTime.min;
 					sin=Math.sin(alpha);
 					cos=Math.cos(alpha);
 					maxRad = minute_radius;			
@@ -410,9 +409,7 @@ module hands{
         var height  = dc.getHeight();
         var center_x = dc.getWidth() / 2;
         var center_y = dc.getHeight() / 2;
-        
-        var reverseMultiplier= App.getApp().getProperty("Reverse") ? -1 : 1 ;
-        
+                
         //var SecHandsForm = (App.getApp().getProperty("SecHandsForm"));
         //seconds_radius = 7/8.0 * center_x;
 		var seconds_radius = height / 2 ; // wegen semiround halbe h�he
@@ -424,7 +421,7 @@ module hands{
        	//!clockTime.sec = 10;
         
         var r1, r2, r0, hand;
-		var alpha = reverseMultiplier*Math.PI/30.0*clockTime.sec;
+		var alpha = Math.PI/30.0*clockTime.sec;
 		
 		dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);		
 		dc.setPenWidth(2);

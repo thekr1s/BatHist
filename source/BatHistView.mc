@@ -350,7 +350,21 @@ class BatHistView extends Ui.WatchFace{
          }
     } 
 
+	function drawGrid(dc) {
+        dc.setPenWidth(1);
+		dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
+		var spacing = 10;
+		for (var x = spacing; x < width; x+=spacing) {
+			dc.drawLine(x,0,x,height - 1);
+
+		}
+		for (var y = spacing; y < height; y+=spacing) {
+			dc.drawLine(0,y,width - 1,y);
+
+		}
  
+
+	}
     function drawGauges(dc) {
         dc.setPenWidth(6);
 		var battery = Toybox.System.getSystemStats().battery / 100;       
@@ -369,7 +383,7 @@ class BatHistView extends Ui.WatchFace{
             full_length = 360 / 12 * -4;
             dir = Gfx.ARC_COUNTER_CLOCKWISE;
 		}
-   }
+    }
  
 	function drawAltitude() {
 			
@@ -830,6 +844,7 @@ function drawBattery(dc) {
         targetDc.setColor(Gfx.COLOR_TRANSPARENT, BGColor);
         targetDc.clear();
       
+	  	drawGrid(targetDc);
 	    drawGauges(targetDc);
         drawHashMarks(targetDc);  
         drawQuarterHashmarks(targetDc);  
@@ -1433,7 +1448,6 @@ var setX = center_x;
         if( offscreenBuffer != null) {
             dc.drawBitmap(0, 0, offscreenBuffer);
         }
- 
     }
 
     function onEnterSleep() {

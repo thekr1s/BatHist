@@ -38,7 +38,7 @@ module distance{
 			}
 					
 			if (unknownDistance) {
-				distStr = Lang.format("Dst ?");
+				distStr = "Dst ?";
 			} else {
 				distStr = Lang.format("$1$", [actDistance.format("%.2f")] );
 			}
