@@ -1,1 +1,8 @@
 bin/
+**/*.mir
+**/*.prg
+**/*.debug.xml
+**/*.iq
+
+
+

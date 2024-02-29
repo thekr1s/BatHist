@@ -51,6 +51,10 @@ module date{
  		info = Calendar.info(now, Time.FORMAT_SHORT);
         dateStr = Lang.format("$1$/$2$/$3$", [info.month, info.day, info.year]); 
  		}
+ 		if (dateFormat == 8) {
+ 		info = Calendar.info(now, Time.FORMAT_SHORT);
+        dateStr = Lang.format("$1$", [info.day]);  
+ 		}
  		//return dateStr;
   	}
   	

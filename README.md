@@ -1,4 +1,4 @@
-# Reverse Aviatorlike
+# Battery History watch face
 
 Aviator like watchface with some color options and many other settings.
 
@@ -7,7 +7,6 @@ Forked from Oliver Bar's <a href="https://github.com/OliverHannover/Aviatorlike"
 To build the watchface you need Garmin Connect IQ SDK and Eclipse with Garmin plugins.
 
 This has various additions, such as
-* Option to reverse hand direction. Also changes numbers (3 and 9) and battery and step gauges for round watch faces.
 * Minor hand change- the simple watch hands can now have no outline
 * Updated the stock yellow color (0xFFAA00) to a better 6-bit yellow (0xFFFF00). Hopefully it will not break 16-color
 watches- they should just approximate to the closest color they can display
