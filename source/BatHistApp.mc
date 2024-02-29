@@ -17,7 +17,11 @@ class BatHistApp extends App.AppBase {
 
     // Return the initial view of your application here
     function getInitialView() {
-        return [ new BatHistView() ];
+        if( Toybox.WatchUi.WatchFace has :onPartialUpdate ) {  
+            return [ new BatHistView(), new AnalogDelegate() ];
+        } else {
+            return [ new BatHistView()];
+        }
     }
     
 

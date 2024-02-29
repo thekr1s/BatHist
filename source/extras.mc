@@ -15,8 +15,6 @@ module extras{
         
         var alphaSunrise = 0;
         var alphaSunset = 0;
-        var hand; 
-
 	   	var sc = new SunCalc();
 		var lat;
 		var lon;
@@ -51,14 +49,12 @@ module extras{
     		alphaSunrise = Math.PI/6*(1.0*sunriseTinfo.hour+sunriseTinfo.min/60.0);
     		alphaSunset = Math.PI/6*(1.0*sunsetTinfo.hour+sunsetTinfo.min/60.0);
       
-        	var r1, r2;      	
+        	var r1;      	
         	var outerRad = 0;
-        	var lenth = 10;
         	var center_x = dc.getWidth() / 2;
         	var center_y = dc.getHeight() / 2;
      
 			r1 = dc.getWidth()/2 - outerRad; //outside
-			r2 = r1 -lenth; ////L�nge des Zeigers
      
 			dc.setColor(App.getApp().getProperty("QuarterNumbersColor"), Gfx.COLOR_TRANSPARENT);
 			

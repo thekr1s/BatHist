@@ -10,8 +10,6 @@ module hands{
   function drawHands(dc) { 
       	var center_x;
    		var center_y;
-   		var width = dc.getWidth();
-        var height  = dc.getHeight();
         center_x = dc.getWidth() / 2;
         center_y = dc.getHeight() / 2;
    		        
@@ -395,24 +393,63 @@ module hands{
   }//End of drawHands(dc)
   
 	
+    // This function is used to generate the coordinates of the 4 corners of the polygon
+    // used to draw a watch hand. The coordinates are generated with specified length,
+    // tail length, and width and rotated around the center point at the provided angle.
+    // 0 degrees is at the 12 o'clock position, and increases in the clockwise direction.
+    function generateHandCoordinates(centerPoint, angle, handLength, tailLength, width) {
+        // Map out the coordinates of the watch hand
+        var coords = [[-(width / 2), tailLength], [-(width / 2), -handLength], [width / 2, -handLength], [width / 2, tailLength]];
+        var result = new [4];
+        var cos = Math.cos(angle);
+        var sin = Math.sin(angle);
+
+        // Transform the coordinates
+        for (var i = 0; i < 4; i += 1) {
+            var x = (coords[i][0] * cos) - (coords[i][1] * sin) + 0.5;
+            var y = (coords[i][0] * sin) + (coords[i][1] * cos) + 0.5;
+
+            result[i] = [centerPoint[0] + x, centerPoint[1] + y];
+        }
+
+        return result;
+    }
 
 
 
-	function drawSecondHands(dc, SecHandsStyle) {        
+    // Compute a bounding box from the passed in points
+    function getBoundingBox( points ) {
+        var min = [9999,9999];
+        var max = [0,0];
+
+        for (var i = 0; i < points.size(); ++i) {
+            if(points[i][0] < min[0]) {
+                min[0] = points[i][0];
+            }
+
+            if(points[i][1] < min[1]) {
+                min[1] = points[i][1];
+            }
+
+            if(points[i][0] > max[0]) {
+                max[0] = points[i][0];
+            }
+
+            if(points[i][1] > max[1]) {
+                max[1] = points[i][1];
+            }
+        }
+
+        return [min, max];
+    }
+
+	function drawSecondHands(dc, partialAllowed, SecHandsStyle, color1, color2) {        
           // the length of the minute hand
         
-        var color1 = (App.getApp().getProperty("SecHands1Color"));
-		var color2 = (App.getApp().getProperty("SecHands2Color"));
-          	
-
- 	  	var width = dc.getWidth();
-        var height  = dc.getHeight();
         var center_x = dc.getWidth() / 2;
         var center_y = dc.getHeight() / 2;
                 
-        //var SecHandsForm = (App.getApp().getProperty("SecHandsForm"));
-        //seconds_radius = 7/8.0 * center_x;
-		var seconds_radius = height / 2 ; // wegen semiround halbe h�he
+		var seconds_radius = dc.getHeight() / 2 - 5 ; 
 		
 		var n;
 	
@@ -423,14 +460,10 @@ module hands{
         var r1, r2, r0, hand;
 		var alpha = Math.PI/30.0*clockTime.sec;
 		
-		dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);		
-		dc.setPenWidth(2);
-
-		r0 = -35;
+		r0 = -15;
 		r1 = 35;
 		r2 = seconds_radius;
 		
-		//if (SecHandsForm == 1) { //classic
 		if (SecHandsStyle == 1) { //classic		
 			//untere Raute		
 			hand =        	[
@@ -458,31 +491,45 @@ module hands{
 			dc.drawCircle(center_x+(seconds_radius-30)*Math.sin(alpha),center_y-(seconds_radius-30)*Math.cos(alpha),6);
 		}
 		
-		//if (SecHandsForm == 2) { //simple
 		if (SecHandsStyle >= 2) { //simple or wanted 1Hz, but can't do it
+	        var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
+			var screenCenterPoint = [center_x, center_y];			
+			var secondHandPoints = generateHandCoordinates(screenCenterPoint, secondHand, r2, 30, 5);
+	
+			if (partialAllowed){
+				// Update the cliping rectangle to the new location of the second 
+				// hand, required by onPartialUpdate
+				var curClip = getBoundingBox( secondHandPoints );
+				var bboxWidth = curClip[1][0] - curClip[0][0] + 1;
+				var bboxHeight = curClip[1][1] - curClip[0][1] + 1;
+				dc.setClip(curClip[0][0], curClip[0][1], bboxWidth, bboxHeight);
+			}
 			
+			var sin = Math.sin(alpha);
+			var cos = Math.cos(alpha);
+
 			dc.setPenWidth(3);
 			dc.setColor(color1, Gfx.COLOR_TRANSPARENT);
-			dc.drawLine(center_x+r0*Math.sin(alpha),center_y-r0*Math.cos(alpha),
-			center_x+(r2-30)*Math.sin(alpha),center_y-(r2-30)*Math.cos(alpha));
+			dc.drawLine(center_x+r0*sin,center_y-r0*cos,
+			center_x+(r2-30)*sin,center_y-(r2-30)*cos);
 			
-			//Top
+			// //Top
 			dc.setPenWidth(3);
 			dc.setColor(color2, Gfx.COLOR_TRANSPARENT);
-			dc.drawLine(center_x+(r2-30)*Math.sin(alpha),center_y-(r2-30)*Math.cos(alpha),
-			center_x+r2*Math.sin(alpha),center_y-r2*Math.cos(alpha));
+			dc.drawLine(center_x+(r2-30)*sin,center_y-(r2-30)*cos,
+			center_x+r2*sin,center_y-r2*cos);
 		
 		
 		} //end simple
 		
 	
 		//Centerpoint
-		dc.setPenWidth(2);
-		dc.setColor(color1, Gfx.COLOR_TRANSPARENT);
-		dc.fillCircle(center_x,center_y,4);
+		// dc.setPenWidth(2);
+		// dc.setColor(color1, Gfx.COLOR_TRANSPARENT);
+		// dc.fillCircle(center_x,center_y,4);
 		
 		dc.setColor(color2, Gfx.COLOR_TRANSPARENT);
-		dc.drawCircle(center_x,center_y,5);
+		dc.drawCircle(center_x,center_y,6);
 }
 
 

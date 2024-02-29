@@ -38,8 +38,6 @@ class BatHistView extends Ui.WatchFace{
 	    var isAwake;
 	    
 	    var offscreenBuffer;
-	    var curClip;
-	    var screenCenterPoint;
 	    var fullScreenRefresh;
 	    
 	    var screenShape;
@@ -69,8 +67,9 @@ class BatHistView extends Ui.WatchFace{
 		var ConnectedPhoneIcon="C";
 		var DisconnectedPhoneIcon="D";
 		var bat_hist;
-		
-		
+		var sec_hands_form;
+		var sec_hands_color1;
+		var sec_hands_color2;	
 		
     function initialize() {
         WatchFace.initialize();        
@@ -78,6 +77,7 @@ class BatHistView extends Ui.WatchFace{
 	    fontIcons = Ui.loadResource(Rez.Fonts.id_font_icons);
         screenShape = Sys.getDeviceSettings().screenShape;                  
         Sys.println("Screenshape = " + screenShape);  
+		isAwake = true;
         
         fullScreenRefresh = true;
         partialUpdatesAllowed = ((Toybox.Graphics has :BufferedBitmap) && (Toybox.WatchUi.WatchFace has :onPartialUpdate));
@@ -139,8 +139,34 @@ class BatHistView extends Ui.WatchFace{
 		   	LLINFOx = 188;
 		   	LLINFOy = 148; 
 		    
-		   	moonx = 185;
-		   	moony = 99;
+		   	moonx = 155;
+		   	moony = 140;
+		   	moonwidth = 40; 		
+		}
+		if (width == 260 && height == 260) {
+			Sys.println("device:" + "Fr255 260");
+			ULBGx = 45;
+		   	ULBGy = 57;
+		   	ULBGwidth = 150;
+		    
+		   	ULTEXTx = 120;
+		   	ULTEXTy = 59;
+		    
+		   	ULINFOx = 188;
+		   	ULINFOy = 57;   
+		    
+		   	LLBGx = 75;
+		   	LLBGy = 147;
+		   	LLBGwidth = 90;
+		    
+		   	LLTEXTx = 70;
+		   	LLTEXTy = 160;
+		    
+		   	LLINFOx = 188;
+		   	LLINFOy = 148; 
+		    
+		   	moonx = 180;
+		   	moony = 150;
 		   	moonwidth = 40; 		
 		}
 		if (width == 215 && height == 180) {
@@ -175,7 +201,8 @@ class BatHistView extends Ui.WatchFace{
             // Allocate a full screen size buffer with a palette of only a few colors to draw
             // the background image of the watchface.  This is used to facilitate blanking
             // the second hand during partial updates of the display
-            offscreenBuffer = new Gfx.BufferedBitmap({
+
+			var options = {
                 :width=>dc.getWidth(),
                 :height=>dc.getHeight(),
                 :palette=> [
@@ -200,8 +227,12 @@ class BatHistView extends Ui.WatchFace{
               		App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
                 ]
                 
-            });
-
+            };
+			if (Gfx has :createBufferedBitmap) {
+        		offscreenBuffer = Gfx.createBufferedBitmap(options);
+    		} else {
+            	offscreenBuffer = new Gfx.BufferedBitmap(options);
+			}
             // Allocate a buffer tall enough to draw the date into the full width of the
             // screen. This buffer is also used for blanking the second hand. This full
             // color buffer is needed because anti-aliased fonts cannot be drawn into
@@ -214,44 +245,15 @@ class BatHistView extends Ui.WatchFace{
             offscreenBuffer = null;
         }
 
-        curClip = null;
-
 		bat_hist = new BatHist(center_x, center_y / 2);
-
-     //   screenCenterPoint = [dc.getWidth()/2, dc.getHeight()/2];
         
     } // onLayout(dc)
-
-    // This function is used to generate the coordinates of the 4 corners of the polygon
-    // used to draw a watch hand. The coordinates are generated with specified length,
-    // tail length, and width and rotated around the center point at the provided angle.
-    // 0 degrees is at the 12 o'clock position, and increases in the clockwise direction.
-    function generateHandCoordinates(centerPoint, angle, handLength, tailLength, width) {
-        // Map out the coordinates of the watch hand
-        var coords = [[-(width / 2), tailLength], [-(width / 2), -handLength], [width / 2, -handLength], [width / 2, tailLength]];
-        var result = new [4];
-        var cos = Math.cos(angle);
-        var sin = Math.sin(angle);
-
-        // Transform the coordinates
-        for (var i = 0; i < 4; i += 1) {
-            var x = (coords[i][0] * cos) - (coords[i][1] * sin) + 0.5;
-            var y = (coords[i][0] * sin) + (coords[i][1] * cos) + 0.5;
-
-            result[i] = [centerPoint[0] + x, centerPoint[1] + y];
-        }
-
-        return result;
-    }
 
    
 
     // Draw the hash mark symbols on the watch-------------------------------------------------------
     function drawHashMarks(dc) {
-
-            var n;      
         	var r1, r2;
-
 
 			if (App.getApp().getProperty("MinutesColor") != 0x000001) {
 	        	//alle 1 minutes
@@ -285,7 +287,6 @@ class BatHistView extends Ui.WatchFace{
       
       
        if ( NbrFont == 0 || NbrFont == 1) { //no number	  		
-			var n;      
         	var r1, r2,  thicknes;      	
         	var outerRad = 0;
         	var lenth=20;
@@ -813,31 +814,9 @@ function drawBattery(dc) {
 		   		    	    
 	}		
 	
-	
-//-----------------------------------------------------------------------------------------------
-// Handle the update event-----------------------------------------------------------------------
-    function onUpdate(dc) {
-    
-   	//Sys.println("width = " + width);
-	//Sys.println("height = " + height);
-	
-	    // We always want to refresh the full screen when we get a regular onUpdate call.
-        fullScreenRefresh = true;
-
-		var targetDc = null;
-        if(null != offscreenBuffer) {
-            dc.clearClip();
-            curClip = null;
-            // If we have an offscreen buffer that we are using to draw the background,
-            // set the draw context of that buffer as our target.
-            targetDc = offscreenBuffer.getDc();
-        } else {
-            targetDc = dc;
-        }
-
-          
-        
-  // Clear the screen--------------------------------------------
+	// Time expensive function to draw static items on the watchface
+	function redrawBackground(targetDc){
+		// Clear the screen--------------------------------------------
         //dc.setColor(App.getApp().getProperty("BackgroundColor"), Gfx.COLOR_TRANSPARENT));
         //var BGColor=0x000001;
         var BGColor= App.getApp().getProperty("BackgroundColor");
@@ -1055,7 +1034,6 @@ function drawBattery(dc) {
 			extras.drawSunMarkers(targetDc);
 		}		
 	   	
-	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
 	    var LowerDispEnable = (App.getApp().getProperty("LDInfo")!=0);
         if (LowerDispEnable) {
 			//background for lower display
@@ -1064,6 +1042,35 @@ function drawBattery(dc) {
 	       	  targetDc.fillRoundedRectangle(LLBGx, LLBGy , LLBGwidth, 28, 5);
 	       	  }
         }
+
+	}
+	
+//-----------------------------------------------------------------------------------------------
+// Handle the update event-----------------------------------------------------------------------
+    function onUpdate(dc) {
+    
+   	//Sys.println("width = " + width);
+	//Sys.println("height = " + height);
+	
+	    // We always want to refresh the full screen when we get a regular onUpdate call.
+        fullScreenRefresh = true;
+
+		var targetDc = null;
+        if(null != offscreenBuffer) {
+            dc.clearClip();
+            // If we have an offscreen buffer that we are using to draw the background,
+            // set the draw context of that buffer as our target.
+			if (Gfx has :createBufferedBitmap) {
+            	targetDc = offscreenBuffer.get().getDc();
+			} else {
+				targetDc = offscreenBuffer.getDc();
+			}
+        } else {
+            targetDc = dc;
+        }
+
+          
+        redrawBackground(targetDc);
 
   // Draw hands under a lot sorta out of order ------------------------------------         
     	if (App.getApp().getProperty("HandsBehind")) {
@@ -1220,6 +1227,7 @@ function drawBattery(dc) {
 	    }
 	    	
 		//Anzeige oberes Display--------------------------  
+	    var UpperDispEnable = (App.getApp().getProperty("UDInfo")!=0);
 		if (UpperDispEnable) {
 			var displayInfo = (App.getApp().getProperty("UDInfo"));
 		//	Sys.println("UDInfo: " + displayInfo);
@@ -1246,6 +1254,7 @@ function drawBattery(dc) {
 		
 			
 	 //Anzeige unteres Display--------------------------  
+	    var LowerDispEnable = (App.getApp().getProperty("UDInfo")!=0);
 		if (LowerDispEnable) {
 			var displayInfo = (App.getApp().getProperty("LDInfo"));
 		//	Sys.println("LDInfo: " + displayInfo);
@@ -1312,137 +1321,91 @@ var setX = center_x;
 		}
 	}	  	
 	 
-
-  // Draw hands ------------------------------------------------------------------         
-     if (!App.getApp().getProperty("HandsBehind")) {
-    	   hands.drawHands(dc); 
+		// Draw hands ------------------------------------------------------------------         
+		if (!App.getApp().getProperty("HandsBehind")) {
+    	   hands.drawHands(targetDc); 
     	 }     	
      	
-  // Center Point with Bluetooth connection
+
+/* 
+ 		//Draw crosshairs for positioning things
+ 		targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
+ 		targetDc.setPenWidth(2);
+ 		targetDc.drawLine(width/2,0,width/2,height);
+ 		targetDc.drawLine(0,height/2,width,height/2);
+*/
+        
+
+  		// Center Point with Bluetooth connection
 	  	//if ((App.getApp().getProperty("CenterDotEnable"))) {
 	  	if ((App.getApp().getProperty("ConnectionIndicator") ==1) && !(Sys.getDeviceSettings().phoneConnected)) {
 				targetDc.setColor((App.getApp().getProperty("BackgroundColor")), Gfx.COLOR_TRANSPARENT);
 		} else {
   			targetDc.setColor((App.getApp().getProperty("HandsColor2")), Gfx.COLOR_TRANSPARENT);
 	   	} 
-
-	    
 	    targetDc.fillCircle(width / 2, height / 2, 5);
 	    targetDc.setPenWidth(2);
      	targetDc.setColor((App.getApp().getProperty("HandsColor2")), Gfx.COLOR_TRANSPARENT);
 	    targetDc.drawCircle(width / 2, height / 2 , 5);
 
-/* 
- 	//Draw crosshairs for positioning things
- 		targetDc.setColor((App.getApp().getProperty("QuarterNumbersColor")), Gfx.COLOR_TRANSPARENT);
- 		targetDc.setPenWidth(2);
- 		targetDc.drawLine(width/2,0,width/2,height);
- 		targetDc.drawLine(0,height/2,width,height/2);
-*/
- 	
- 	// Output the offscreen buffers to the main display if required.
+ 		// Output the offscreen buffers to the main display if required.
         drawBackground(dc);
-        
- 	 //draw second hand 
- 	 	var SecHandStyle = App.getApp().getProperty("SecHandsForm");
-		if( partialUpdatesAllowed && (SecHandStyle==3) ) {
+
+		sec_hands_form = App.getApp().getProperty("SecHandsForm");
+		sec_hands_color1 = App.getApp().getProperty("SecHands1Color");
+		sec_hands_color2 = App.getApp().getProperty("SecHands2Color");
+		if ( partialUpdatesAllowed && (sec_hands_form == 3 )) {
             // If this device supports partial updates and they are currently
             // allowed run the onPartialUpdate method to draw the second hand.
             //Sys.println("Entering onPartialUpdate");
             onPartialUpdate( dc );
         } else if (isAwake) {
 			//var SecHandEnable = (App.getApp().getProperty("SecHandEnable"));
-	   			if (SecHandStyle > 0) {
-	   			//Sys.println("Entering drawSecHands with arg: "+SecHandStyle);
-	 			hands.drawSecondHands(dc, SecHandStyle);
-	 			}
+			if (sec_hands_form > 0) {
+				//Sys.println("Entering drawSecHands with arg: "+SecHandStyle);
+				hands.drawSecondHands(dc, partialUpdatesAllowed, sec_hands_form, sec_hands_color1, sec_hands_color2);
+			}
  		}
- 
 
- 
-//Sys.println("used: " + System.getSystemStats().usedMemory);
-//Sys.println("free: " + System.getSystemStats().freeMemory);
-//Sys.println("total: " + System.getSystemStats().totalMemory);
-//Sys.println("");
-          fullScreenRefresh = false;
-          
-} // end onUpdate(dc)-----------------------------------
-       
+	//Sys.println("used: " + System.getSystemStats().usedMemory);
+	//Sys.println("free: " + System.getSystemStats().freeMemory);
+	//Sys.println("total: " + System.getSystemStats().totalMemory);
+	//Sys.println("");
+			fullScreenRefresh = false;
+			
+	} // end onUpdate(dc)-----------------------------------
+		
 
     // Handle the partial update event
     function onPartialUpdate( dc ) {
         // If we're not doing a full screen refresh we need to re-draw the background
         // before drawing the updated second hand position. Note this will only re-draw
         // the background in the area specified by the previously computed clipping region.
-        if(App.getApp().getProperty("SecHandsForm") != 3) {  //draw 1Hz second hand if you so chose
+		var start = Sys.getTimer();
+        if(sec_hands_form != 3) {  //draw 1Hz second hand if you so chose
         	return;
         }
+
         if(!fullScreenRefresh) {
             drawBackground(dc);
         }
 
-        var clockTime = System.getClockTime();
-        var secondHand = (clockTime.sec / 60.0) * Math.PI * 2;
-      
-        	var r1;      	
-        	var outerRad =0;
-        	var center_x = dc.getWidth() / 2;
-        	var center_y = dc.getHeight() / 2;    
-			r1 = dc.getWidth()/2 - outerRad; //outside
-			
-			//screenCenterPoint = [center_x+r1*Math.sin(secondHand),center_y-r1*Math.cos(secondHand)];
-			screenCenterPoint = [width/2, height/2];			
-			//var secondHandPoints = generateHandCoordinates(center_x+r1*Math.sin(secondHand),center_y-r1*Math.cos(secondHand), center_x+r2*Math.sin(secondHand),center_y-r2*Math.cos(secondHand));
-        
-         	var secondHandPoints = generateHandCoordinates(screenCenterPoint, secondHand, 100, 30, 3);
 
+		hands.drawSecondHands(dc, true, sec_hands_form, sec_hands_color1, sec_hands_color2);
 
-
-
-        // Update the cliping rectangle to the new location of the second hand.
-        curClip = getBoundingBox( secondHandPoints );
-        var bboxWidth = curClip[1][0] - curClip[0][0] + 1;
-        var bboxHeight = curClip[1][1] - curClip[0][1] + 1;
-        dc.setClip(curClip[0][0], curClip[0][1], bboxWidth, bboxHeight);
-
-        // Draw the second hand to the screen.
-        dc.setColor(App.getApp().getProperty("SecHands1Color"), Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon(secondHandPoints);
+        // // Draw the second hand to the screen.
+        // dc.setColor(sec_hands_color2, Graphics.COLOR_TRANSPARENT);
+        // dc.fillPolygon(secondHandPoints);
  			
- 		//fullScreenRefresh = false;
- 			
-    }
+ 		fullScreenRefresh = false;
+		var t = Sys.getTimer() - start;
+		if (t > 25) {
+			System.println("partian update took: " + t); 			
+		}
+	}
 
-    // Compute a bounding box from the passed in points
-    function getBoundingBox( points ) {
-        var min = [9999,9999];
-        var max = [0,0];
-
-        for (var i = 0; i < points.size(); ++i) {
-            if(points[i][0] < min[0]) {
-                min[0] = points[i][0];
-            }
-
-            if(points[i][1] < min[1]) {
-                min[1] = points[i][1];
-            }
-
-            if(points[i][0] > max[0]) {
-                max[0] = points[i][0];
-            }
-
-            if(points[i][1] > max[1]) {
-                max[1] = points[i][1];
-            }
-        }
-
-        return [min, max];
-    }
 
     function drawBackground(dc) {
-        var width = dc.getWidth();
-        var height = dc.getHeight();
-
         //If we have an offscreen buffer that has been written to
         //draw it to the screen.
         if( offscreenBuffer != null) {
@@ -1461,6 +1424,10 @@ var setX = center_x;
 }
 
 class AnalogDelegate extends Ui.WatchFaceDelegate {
+
+	function initialize() {
+		WatchFaceDelegate.initialize();	
+	}
     // The onPowerBudgetExceeded callback is called by the system if the
     // onPartialUpdate method exceeds the allowed power budget. If this occurs,
     // the system will stop invoking onPartialUpdate each second, so we set the
@@ -1469,7 +1436,7 @@ class AnalogDelegate extends Ui.WatchFaceDelegate {
     function onPowerBudgetExceeded(powerInfo) {
         System.println( "Average execution time: " + powerInfo.executionTimeAverage );
         System.println( "Allowed execution time: " + powerInfo.executionTimeLimit );
-        partialUpdatesAllowed = false;
+        // partialUpdatesAllowed = false;
     }
 }
 
