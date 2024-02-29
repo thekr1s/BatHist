@@ -206,9 +206,6 @@ class BatHistView extends Ui.WatchFace{
                 :width=>dc.getWidth(),
                 :height=>dc.getHeight(),
                 :palette=> [
-                 	//App.getApp().getProperty("BackgroundColor"),
-                 	//App.getApp().getProperty("MinutesColor"),
-                 	//App.getApp().getProperty("QuarterNumbersColor"),
                     Graphics.COLOR_DK_GREEN,
                     Graphics.COLOR_GREEN,
                     Graphics.COLOR_DK_BLUE,
@@ -224,7 +221,6 @@ class BatHistView extends Ui.WatchFace{
               		Graphics.COLOR_DK_GRAY,
               		Graphics.COLOR_BLACK,
               		Graphics.COLOR_WHITE,
-              		App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB")
                 ]
                 
             };

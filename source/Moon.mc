@@ -62,13 +62,8 @@ class Moon {
         dc.drawBitmap(moonx+1, moony+1, moon_bitmap);
 		var x, xby2;
 		//var BGColor = App.getApp().getProperty("BackgroundColor");
-        if (App.getApp().getProperty("SixbitBackground")) {
-        	dc.setColor(App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB"),Gfx.COLOR_TRANSPARENT);
-        	}
-        	else {
-        	dc.setColor(App.getApp().getProperty("BackgroundColor"),Gfx.COLOR_TRANSPARENT);
-        	}
-//dc.setColor(Gfx.COLOR_BLACK,Gfx.COLOR_TRANSPARENT);
+		dc.setColor(App.getApp().getProperty("BackgroundColor"),Gfx.COLOR_TRANSPARENT);
+		//dc.setColor(Gfx.COLOR_BLACK,Gfx.COLOR_TRANSPARENT);
         /*if (BGColor==0x000001) {
         		BGColor=App.getApp().getProperty("BackgroundColorR")+App.getApp().getProperty("BackgroundColorG")+App.getApp().getProperty("BackgroundColorB");
         	}

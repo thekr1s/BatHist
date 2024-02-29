@@ -12,14 +12,9 @@
 	<property id="CenterDotEnable" type="boolean">true</property>
 	<property id="ConnectionIndicator" type="number">1</property>
 	
-	
-    <property id="SixbitBackground" type="boolean">false</property>
     <property id="UseIcons" type="boolean">false</property>
     
     <property id="BackgroundColor" type="number">0x000000</property>
-    <property id="BackgroundColorR" type="number">0x000000</property>
-    <property id="BackgroundColorG" type="number">0x000000</property>
-    <property id="BackgroundColorB" type="number">0x0000AA</property>
 
     <property id="ShowDigitalBackground" type="boolean">false</property>
     <property id="DigitalBackgroundColor" type="number">0xAAAAAA</property>
