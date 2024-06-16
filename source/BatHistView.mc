@@ -282,7 +282,7 @@ class BatHistView extends Ui.WatchFace{
       
       
       
-       if ( NbrFont == 0 || NbrFont == 1) { //no number	  		
+       if ( NbrFont == 0 || NbrFont == 1) { //no number or only the twelve	
         	var r1, r2,  thicknes;      	
         	var outerRad = 0;
         	var lenth=20;
@@ -296,28 +296,12 @@ class BatHistView extends Ui.WatchFace{
         	var thick = 5;
         	thicknes = thick * 0.02;
         	
-        	//when moon then only three marks
-        	var nurdrei = 0;
         	var alphaMax = 4;
-        	var MoonEnable = (App.getApp().getProperty("MoonEnable"));
-				if (MoonEnable && NbrFont == 0) {
-        			nurdrei = (Math.PI / 2) ;
-        			alphaMax = 4;
-        		}
-        		if (MoonEnable && NbrFont == 1) {
-        			nurdrei = (Math.PI / 2) ;
-        			alphaMax = 3;
-        		}
-        		if (MoonEnable == false && NbrFont == 0) {
-        			nurdrei = 0;
-        			alphaMax = 4;
-        		}
-        		if (MoonEnable == false && NbrFont == 1) {
-        			nurdrei = 0 ;
-        			alphaMax = 3;
-        		}
-        		      	
-           	for (var alpha = (Math.PI / 2) + nurdrei ; alpha <= alphaMax * Math.PI / 2; alpha += (Math.PI / 2)) { //jede 15. Minute    
+			if (NbrFont == 1) { // Only the twelve
+				alphaMax = 3;
+			}
+					
+           	for (var alpha = (Math.PI / 2) ; alpha <= alphaMax * Math.PI / 2; alpha += (Math.PI / 2)) { //jede 15. Minute    
 				r1 = (width/2 + 3) - outerRad; //outside
 				r2 = r1 -lenth; //inside			
 							
@@ -881,26 +865,20 @@ function drawBattery(dc) {
 		}
 
         if (screenShape == 1) {  // round
-   		    if ( NbrFont == 1) { //fat 12 only
+   		    if ( NbrFont == 1 || NbrFont == 2) { //fat or fat 12 only
 	    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
 	    		if (twelveNum == 0) {
-					targetDc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
+					targetDc.drawText((width / 2), 0, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
 				} else {
 					targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
 				}
 			
-	    	}            
-		    if ( NbrFont == 2) { //fat
-		    		font1 = Ui.loadResource(Rez.Fonts.id_font_fat);
-		    		if (twelveNum == 0) {
-						targetDc.drawText((width / 2), 5, font1, "12", Gfx.TEXT_JUSTIFY_CENTER);
-					} else {
-						targetDc.drawText((width / 2), iconDrop, fontIcons, twelveNum, Gfx.TEXT_JUSTIFY_CENTER);
+				if ( NbrFont == 2) { //fat
+						targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
+						targetDc.drawText(width / 2, height - 54, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
+						targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
 					}
-	    			targetDc.drawText(width - 16, (height / 2) - 26, font1, rightNum, Gfx.TEXT_JUSTIFY_RIGHT);
-	        		targetDc.drawText(width / 2, height - 54, font1, "6", Gfx.TEXT_JUSTIFY_CENTER);
-	        		targetDc.drawText(16, (height / 2) - 26, font1, leftNum, Gfx.TEXT_JUSTIFY_LEFT);
-		    	}
+				}
 		    if ( NbrFont == 3) { //race
 		    		font1 = Ui.loadResource(Rez.Fonts.id_font_race);
 		    		if (twelveNum == 0) {
